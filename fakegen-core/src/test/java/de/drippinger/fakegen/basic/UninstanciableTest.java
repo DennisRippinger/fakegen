@@ -69,7 +69,7 @@ public class UninstanciableTest {
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.toString()).matches("de\\.drippinger\\.fakegen\\.types\\.InterfaceType" +
-                "\\$SyntheticImpl\\{name=.*, time=.*}");
+                "\\$SyntheticImpl\\{.*}");
 
     }
 

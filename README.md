@@ -1,4 +1,5 @@
 # Fakegen
+[![Build Status](https://travis-ci.com/DennisRippinger/fakegen.svg?branch=master)](https://travis-ci.com/DennisRippinger/fakegen)
 
 Fakegen is a library to create testdata on demand. Unlike other libraries it can fill an entire object graph of your model class with random data. So you can focus on the relevant test data.
 

@@ -1,4 +1,4 @@
 language: java
-script: ./mvnw clean test
+script: ./mvnw clean test jacoco:report coveralls:report
 notifications:
   email: false

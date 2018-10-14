@@ -1,5 +1,6 @@
 # Fakegen
 [![Build Status](https://travis-ci.com/DennisRippinger/fakegen.svg?branch=master)](https://travis-ci.com/DennisRippinger/fakegen)
+[![Coverage Status](https://coveralls.io/repos/github/DennisRippinger/fakegen/badge.svg?branch=master)](https://coveralls.io/github/DennisRippinger/fakegen?branch=master)
 
 Fakegen is a library to create testdata on demand. Unlike other libraries it can fill an entire object graph of your model class with random data. So you can focus on the relevant test data.
 

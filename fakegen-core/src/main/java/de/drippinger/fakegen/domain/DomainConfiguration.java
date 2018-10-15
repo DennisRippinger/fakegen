@@ -2,6 +2,7 @@ package de.drippinger.fakegen.domain;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -10,9 +11,11 @@ import static de.drippinger.fakegen.util.ReflectionUtils.mapObjectToPrimitive;
 /**
  * @author Dennis Rippinger
  */
-public class DomainConfiguration {
+public abstract class DomainConfiguration {
 
     private final Map<DomainTuple, Supplier> domain = new ConcurrentHashMap<>();
+
+    public abstract void init(Random random);
 
     @SuppressWarnings("unchecked")
     public <T> void fieldForClassShouldUse(String fieldName, Class<T> clazz, Supplier<T> supplier) {

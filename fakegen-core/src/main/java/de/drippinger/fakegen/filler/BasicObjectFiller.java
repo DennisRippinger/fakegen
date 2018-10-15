@@ -1,6 +1,7 @@
 package de.drippinger.fakegen.filler;
 
 import de.drippinger.fakegen.domain.DomainConfiguration;
+import de.drippinger.fakegen.domain.SimpleDomainConfiguration;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -21,25 +22,41 @@ public class BasicObjectFiller implements ObjectFiller {
 
     protected Random random;
 
-    protected DomainConfiguration domainConfiguration = new DomainConfiguration();
+    protected DomainConfiguration domainConfiguration = new SimpleDomainConfiguration();
 
     public BasicObjectFiller() {
         this.random = new Random();
         this.seed = getFieldValue(random, "seed");
+
+        domainConfiguration.init(random);
     }
 
     public BasicObjectFiller(Long seed) {
         this.seed = new AtomicLong(seed);
         this.random = new Random(seed);
+
+        domainConfiguration.init(random);
+    }
+
+    public BasicObjectFiller(Long seed, DomainConfiguration domainConfiguration) {
+        this.seed = new AtomicLong(seed);
+        this.random = new Random(seed);
+        this.domainConfiguration = domainConfiguration;
+
+        domainConfiguration.init(random);
     }
 
     public BasicObjectFiller(DomainConfiguration domainConfiguration) {
+        this.random = new Random();
+        this.seed = getFieldValue(random, "seed");
+
         this.domainConfiguration = domainConfiguration;
     }
 
     @Override
     public void setDomainConfiguration(DomainConfiguration domainConfiguration) {
         this.domainConfiguration = domainConfiguration;
+        domainConfiguration.init(random);
     }
 
     @Override

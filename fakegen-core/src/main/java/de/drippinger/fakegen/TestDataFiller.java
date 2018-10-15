@@ -33,6 +33,14 @@ public class TestDataFiller {
         this(new BasicObjectFiller());
     }
 
+    public TestDataFiller(Long seed) {
+        this(new BasicObjectFiller(seed));
+    }
+
+    public TestDataFiller(Long seed, DomainConfiguration domainConfiguration) {
+        this(new BasicObjectFiller(seed, domainConfiguration));
+    }
+
     public TestDataFiller(DomainConfiguration domainConfiguration) {
         this(new BasicObjectFiller(domainConfiguration));
     }

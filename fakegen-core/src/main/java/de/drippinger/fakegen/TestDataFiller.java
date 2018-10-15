@@ -1,5 +1,6 @@
 package de.drippinger.fakegen;
 
+import de.drippinger.fakegen.domain.DomainConfiguration;
 import de.drippinger.fakegen.filler.BasicObjectFiller;
 import de.drippinger.fakegen.filler.ObjectFiller;
 import de.drippinger.fakegen.uninstanciable.DynamicClassGenerator;
@@ -30,6 +31,10 @@ public class TestDataFiller {
 
     public TestDataFiller() {
         this(new BasicObjectFiller());
+    }
+
+    public TestDataFiller(DomainConfiguration domainConfiguration) {
+        this(new BasicObjectFiller(domainConfiguration));
     }
 
     public TestDataFiller(ObjectFiller objectFiller) {

@@ -1,5 +1,7 @@
 package de.drippinger.fakegen.filler;
 
+import de.drippinger.fakegen.domain.DomainConfiguration;
+
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,11 +14,14 @@ import static de.drippinger.fakegen.util.ReflectionUtils.getFieldValue;
 /**
  * @author Dennis Rippinger
  */
+@SuppressWarnings("unchecked")
 public class BasicObjectFiller implements ObjectFiller {
 
     protected AtomicLong seed;
 
     protected Random random;
+
+    protected DomainConfiguration domainConfiguration = new DomainConfiguration();
 
     public BasicObjectFiller() {
         this.random = new Random();
@@ -28,6 +33,15 @@ public class BasicObjectFiller implements ObjectFiller {
         this.random = new Random(seed);
     }
 
+    public BasicObjectFiller(DomainConfiguration domainConfiguration) {
+        this.domainConfiguration = domainConfiguration;
+    }
+
+    @Override
+    public void setDomainConfiguration(DomainConfiguration domainConfiguration) {
+        this.domainConfiguration = domainConfiguration;
+    }
+
     @Override
     public String getSeed() {
         return seed.toString();
@@ -35,7 +49,9 @@ public class BasicObjectFiller implements ObjectFiller {
 
     @Override
     public String createString(String fieldName) {
-        return createString(fieldName, 10);
+        return domainConfiguration
+                .getSupplierValue(fieldName, String.class)
+                .orElseGet(() -> createString(fieldName, 10));
     }
 
     @Override
@@ -53,82 +69,113 @@ public class BasicObjectFiller implements ObjectFiller {
 
     @Override
     public Integer createInteger(String fieldName) {
-        return random.nextInt();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Integer.class)
+                .orElseGet(() -> random.nextInt());
     }
 
     @Override
     public Long createLong(String fieldName) {
-        return random.nextLong();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Long.class)
+                .orElseGet(() -> random.nextLong());
     }
 
     @Override
     public Short createShort(String fieldName) {
-        return (short) random.nextInt(Short.MAX_VALUE + 1);
+        return domainConfiguration
+                .getSupplierValue(fieldName, Short.class)
+                .orElseGet(() -> (short) random.nextInt(Short.MAX_VALUE + 1));
     }
 
     @Override
     public Double createDouble(String fieldName) {
-        return random.nextDouble();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Double.class)
+                .orElseGet(() -> random.nextDouble());
     }
 
     @Override
     public Float createFloat(String fieldName) {
-        return random.nextFloat();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Float.class)
+                .orElseGet(() -> random.nextFloat());
     }
 
     @Override
     public BigInteger createBitInteger(String fieldName) {
-        return BigInteger.valueOf(random.nextLong());
+        return domainConfiguration
+                .getSupplierValue(fieldName, BigInteger.class)
+                .orElseGet(() -> BigInteger.valueOf(random.nextLong()));
     }
 
     @Override
     public Boolean createBoolean(String fieldName) {
-        return random.nextBoolean();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Boolean.class)
+                .orElseGet(() -> random.nextBoolean());
     }
 
     @Override
     public Date createDate(String fieldName) {
-        return new Date();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Date.class)
+                .orElseGet(Date::new);
     }
 
     @Override
     public LocalDate createLocalDate(String fieldName) {
-        return LocalDate.now();
+        return domainConfiguration
+                .getSupplierValue(fieldName, LocalDate.class)
+                .orElseGet(LocalDate::now);
     }
 
     @Override
     public LocalDateTime createLocalDateTime(String fieldName) {
-        return LocalDateTime.now();
+        return domainConfiguration
+                .getSupplierValue(fieldName, LocalDateTime.class)
+                .orElseGet(LocalDateTime::now);
     }
 
     @Override
     public LocalTime createLocalTime(String fieldName) {
-        return LocalTime.now();
+        return domainConfiguration
+                .getSupplierValue(fieldName, LocalTime.class)
+                .orElseGet(LocalTime::now);
     }
 
     @Override
     public List createList(String fieldName) {
-        return new ArrayList();
+        return domainConfiguration
+                .getSupplierValue(fieldName, List.class)
+                .orElseGet(ArrayList::new);
     }
 
     @Override
     public Set createSet(String fieldName) {
-        return new HashSet();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Set.class)
+                .orElseGet(HashSet::new);
     }
 
     @Override
     public Map createMap(String fieldName) {
-        return new HashMap();
+        return domainConfiguration
+                .getSupplierValue(fieldName, Map.class)
+                .orElseGet(HashMap::new);
     }
 
     @Override
     public Object createEnum(String fieldName, Class enumClass) {
-        Object[] enumValues = enumClass.getEnumConstants();
-        if (enumValues.length > 0) {
-            return enumValues[random.nextInt(enumValues.length)];
-        }
-        return null;
+        return domainConfiguration
+                .getSupplierValue(fieldName, enumClass)
+                .orElseGet(() -> {
+                    Object[] enumValues = enumClass.getEnumConstants();
+                    if (enumValues.length > 0) {
+                        return enumValues[random.nextInt(enumValues.length)];
+                    }
+                    return null;
+                });
     }
-
 
 }

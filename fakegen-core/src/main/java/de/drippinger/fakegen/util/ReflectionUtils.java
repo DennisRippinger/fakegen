@@ -55,6 +55,23 @@ public class ReflectionUtils {
         return methods;
     }
 
+    public static Optional<Class> mapObjectToPrimitive(Class<?> returnType) {
+        if (returnType.equals(Integer.class)) {
+            return Optional.of(int.class);
+        } else if (returnType.equals(Double.class)) {
+            return Optional.of(double.class);
+        } else if (returnType.equals(Float.class)) {
+            return Optional.of(float.class);
+        } else if (returnType.equals(Boolean.class)) {
+            return Optional.of(boolean.class);
+        } else if (returnType.equals(Short.class)) {
+            return Optional.of(short.class);
+        } else if (returnType.equals(Long.class)) {
+            return Optional.of(long.class);
+        }
+        return Optional.empty();
+    }
+
     private static boolean isNotBaseObjectMethod(Method method) {
         return !OBJECT_METHOD.contains(method);
     }

@@ -32,6 +32,7 @@ class BasicObjectFillerUsageTest {
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getBirthday()).isToday();
         assertThat(randomFilledInstance.getName()).hasSize(10);
+        assertThat(randomFilledInstance.getSimpleEnum()).isNotNull();
     }
 
     @Test

@@ -51,6 +51,7 @@ public class BasicObjectFiller implements ObjectFiller {
         this.seed = getFieldValue(random, "seed");
 
         this.domainConfiguration = domainConfiguration;
+        domainConfiguration.init(random);
     }
 
     @Override

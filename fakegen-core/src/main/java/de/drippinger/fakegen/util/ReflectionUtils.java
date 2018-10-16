@@ -2,7 +2,6 @@ package de.drippinger.fakegen.util;
 
 import de.drippinger.fakegen.filler.ObjectFiller;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -121,6 +120,10 @@ public final class ReflectionUtils {
 
     public static boolean isAbstractClass(Class<?> clazz) {
         return Modifier.isAbstract(clazz.getModifiers());
+    }
+
+    public static boolean isStaticMethod(Method method) {
+        return Modifier.isStatic(method.getModifiers());
     }
 
     @SneakyThrows

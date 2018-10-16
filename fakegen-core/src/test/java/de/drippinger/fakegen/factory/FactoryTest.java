@@ -2,7 +2,7 @@ package de.drippinger.fakegen.factory;
 
 import de.drippinger.fakegen.TestDataFiller;
 import de.drippinger.fakegen.exception.FakegenException;
-import de.drippinger.fakegen.types.BeanByFactory;
+import de.drippinger.fakegen.types.BeanByFactoryType;
 import de.drippinger.fakegen.types.SimpleType;
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +19,8 @@ class FactoryTest {
     void should_fill_object_by_factory() {
         TestDataFiller tdf = new TestDataFiller();
 
-        BeanByFactory randomFilledByFactory = tdf
-                .createRandomFilledByFactory(BeanByFactory.class, method("createBeanWith", String.class));
+        BeanByFactoryType randomFilledByFactory = tdf
+                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
 
         assertThat(randomFilledByFactory.getSomeField())
                 .isNotEmpty()
@@ -33,7 +33,7 @@ class FactoryTest {
 
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactory.class, method("createBeanWitf", String.class)));
+                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWitf", String.class)));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)
@@ -46,7 +46,7 @@ class FactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactory.class, method("createBeanWith", Double.class)));
+                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith", Double.class)));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)
@@ -59,7 +59,7 @@ class FactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactory.class, method("somethingElse", SimpleType.class)));
+                .createRandomFilledByFactory(BeanByFactoryType.class, method("somethingElse", SimpleType.class)));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)
@@ -71,7 +71,7 @@ class FactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactory.class, method("createBeanWith")));
+                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith")));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)

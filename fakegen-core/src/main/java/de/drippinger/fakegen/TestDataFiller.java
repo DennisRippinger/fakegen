@@ -62,6 +62,34 @@ public class TestDataFiller {
         return createRandomFilledInstanceInternal(clazz, 0);
     }
 
+
+    public <T> T createRandomFilledByFactory(Class<T> clazz) {
+        try {
+
+            Optional<Method> possibleFactoryMethod = Arrays.stream(clazz.getMethods())
+                    .filter(ReflectionUtils::isStaticMethod)
+                    .filter(method -> method.getReturnType().equals(clazz))
+                    .filter(method -> !Arrays.stream(method.getParameterTypes()).anyMatch(clazz::equals))
+                    .findFirst();
+
+            if (possibleFactoryMethod.isPresent()) {
+                Method method = possibleFactoryMethod.get();
+
+                Object[] instances = Arrays.stream(method.getParameterTypes())
+                        .map(this::createRandomFilledInstance)
+                        .toArray();
+
+                return (T) method.invoke(null, instances);
+            }
+
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new FakegenException("Could not invoke factory method", e);
+        }
+
+        return null;
+
+    }
+
     public <T> T createRandomFilledByFactory(Class<T> clazz, MethodHolder methodHolder) {
         try {
             Method method = methodHolder.createMethod(clazz);

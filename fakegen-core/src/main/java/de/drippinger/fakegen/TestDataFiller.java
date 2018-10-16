@@ -1,20 +1,20 @@
 package de.drippinger.fakegen;
 
 import de.drippinger.fakegen.domain.DomainConfiguration;
+import de.drippinger.fakegen.exception.FakegenException;
 import de.drippinger.fakegen.filler.BasicObjectFiller;
 import de.drippinger.fakegen.filler.ObjectFiller;
 import de.drippinger.fakegen.uninstanciable.DynamicClassGenerator;
 import de.drippinger.fakegen.util.ReflectionUtils;
 import lombok.SneakyThrows;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static de.drippinger.fakegen.exception.ExceptionHelper.createExceptionMessage;
 import static de.drippinger.fakegen.util.ReflectionUtils.*;
 
 /**
@@ -62,9 +62,30 @@ public class TestDataFiller {
         return createRandomFilledInstanceInternal(clazz, 0);
     }
 
+    public <T> T createRandomFilledByFactory(Class<T> clazz, MethodHolder methodHolder) {
+        try {
+            Method method = methodHolder.createMethod(clazz);
+
+            Object[] instances = Arrays.stream(methodHolder.getParameterTypes())
+                    .map(this::createRandomFilledInstance)
+                    .toArray();
+
+            return (T) method.invoke(null, instances);
+
+        } catch (NoSuchMethodException e) {
+            String message = createExceptionMessage(clazz, methodHolder);
+            throw new FakegenException(message, e);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new FakegenException("Could not invoke factory method", e);
+        }
+
+    }
+
+
     public String getSeed() {
         return objectFiller.getSeed();
     }
+
 
     private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter) {
 

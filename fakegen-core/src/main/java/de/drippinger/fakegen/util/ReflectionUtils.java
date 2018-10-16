@@ -12,8 +12,7 @@ import java.util.stream.Stream;
  * @author Dennis Rippinger
  */
 @SuppressWarnings("unchecked")
-@UtilityClass
-public class ReflectionUtils {
+public final class ReflectionUtils {
 
     private static final Set<Method> OBJECT_METHOD = new HashSet(Arrays.asList(Object.class.getMethods()));
 

@@ -2,6 +2,8 @@ package de.drippinger.fakegen.domain;
 
 import de.drippinger.fakegen.TestDataFiller;
 import de.drippinger.fakegen.types.JavaBaseTypes;
+
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
@@ -29,7 +31,7 @@ class DomainBasicTest {
         JavaBaseTypes randomFilledInstance = tdf.createRandomFilledInstance(JavaBaseTypes.class);
 
         assertThat(randomFilledInstance.getSomeBigInteger()).isEqualTo(123);
-        assertThat(randomFilledInstance.getSomeDate()).isEqualToIgnoringSeconds(Date.from(Instant.now().minus(1, DAYS)));
+        assertThat(randomFilledInstance.getSomeDate()).isEqualToIgnoringSeconds(DateUtils.addDays(new Date(), -1));
         assertThat(randomFilledInstance.getSomeLocalDate()).isBeforeOrEqualTo(LocalDate.now().minusDays(1));
         assertThat(randomFilledInstance.getSomeLocalDateTime()).isBeforeOrEqualTo(LocalDateTime.now().minusDays(1));
         assertThat(randomFilledInstance.getSomeLocalTime()).isBeforeOrEqualTo(LocalTime.now().minusHours(1));
@@ -42,7 +44,7 @@ class DomainBasicTest {
 
         @Override
         public void init(Random random) {
-            configuration.fieldForClassShouldUse("someDate", Date.class, () -> Date.from(Instant.now().minus(1, DAYS)));
+            configuration.fieldForClassShouldUse("someDate", Date.class, () -> DateUtils.addDays(new Date(), -1));
             configuration.fieldForClassShouldUse("someLocalDate", LocalDate.class, () -> LocalDate.now().minusDays(1));
             configuration.fieldForClassShouldUse("someLocalDateTime", LocalDateTime.class, () -> LocalDateTime.now().minusDays(1));
             configuration.fieldForClassShouldUse("someLocalTime", LocalTime.class, () -> LocalTime.now().minusHours(1));

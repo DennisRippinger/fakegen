@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static de.drippinger.fakegen.util.ReflectionUtils.getFieldValue;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 /**
  * @author Dennis Rippinger
  */
@@ -74,15 +76,8 @@ public class BasicObjectFiller implements ObjectFiller {
 
     @Override
     public String createString(String fieldName, int length) {
-        int leftLimit = 48; // Letter '0'
-        int rightLimit = 122; // Letter 'z'
-
-        StringBuilder buffer = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int randomLimitedInt = leftLimit + (int) (random.nextDouble() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
-        }
-        return buffer.toString();
+        // Letter '0' to Letter 'z'
+        return RandomStringUtils.random(length, 48, 122, true, true, null, random);
     }
 
     @Override

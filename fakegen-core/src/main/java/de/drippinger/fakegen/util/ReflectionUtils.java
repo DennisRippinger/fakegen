@@ -7,6 +7,9 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+
 /**
  * @author Dennis Rippinger
  */
@@ -104,6 +107,16 @@ public final class ReflectionUtils {
         }
     }
 
+    public static Optional<Method> findPossibleSetterForField(Class clazz, Field field) {
+        return Arrays
+                .stream(clazz.getMethods())
+                .filter(method -> method.getParameterCount() == 1)
+                .filter(method -> containsIgnoreCase(method.getName(), field.getName()) ||
+                        equalsIgnoreCase(method.getName(), field.getName()))
+                .filter(method -> method.getParameterTypes()[0].equals(field.getType()))
+                .findFirst();
+    }
+
     private static boolean methodIsSuitableRandomFactory(Method method, Parameter[] parameters) {
         return parameters.length == 1 &&
                 parameters[0].getType().equals(String.class) &&
@@ -112,6 +125,10 @@ public final class ReflectionUtils {
 
     public static boolean isNotFinal(Field field) {
         return !Modifier.isFinal(field.getModifiers());
+    }
+
+    public static boolean isPublic(Member member) {
+        return Modifier.isPublic(member.getModifiers());
     }
 
     public static boolean isNotRelevantForCoverage(Field field) {

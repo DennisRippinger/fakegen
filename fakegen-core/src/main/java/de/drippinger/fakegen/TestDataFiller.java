@@ -9,13 +9,12 @@ import de.drippinger.fakegen.util.ReflectionUtils;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static de.drippinger.fakegen.exception.ExceptionHelper.createExceptionMessage;
 import static de.drippinger.fakegen.util.ReflectionUtils.*;
+import static java.util.Collections.singletonList;
 
 /**
  * @author Dennis Rippinger
@@ -63,13 +62,17 @@ public class TestDataFiller {
     }
 
 
+    public <T> T createFromBuilder(Class<T> clazz) {
+        return createRandomFilledInstanceInternal(clazz, 0, true, singletonList("initBits"));
+    }
+
     public <T> T createRandomFilledByFactory(Class<T> clazz) {
         try {
 
             Optional<Method> possibleFactoryMethod = Arrays.stream(clazz.getMethods())
                     .filter(ReflectionUtils::isStaticMethod)
                     .filter(method -> method.getReturnType().equals(clazz))
-                    .filter(method -> !Arrays.stream(method.getParameterTypes()).anyMatch(clazz::equals))
+                    .filter(method -> Arrays.stream(method.getParameterTypes()).noneMatch(clazz::equals))
                     .findFirst();
 
             if (possibleFactoryMethod.isPresent()) {
@@ -114,8 +117,11 @@ public class TestDataFiller {
         return objectFiller.getSeed();
     }
 
-
     private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter) {
+        return createRandomFilledInstanceInternal(clazz, recursionCounter, false, Collections.emptyList());
+    }
+
+    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor, List<String> ignoreFields) {
 
         if (objectFillerFactoryMethods.containsKey(clazz)) {
             Method method = objectFillerFactoryMethods.get(clazz);
@@ -124,28 +130,29 @@ public class TestDataFiller {
             return (T) objectFiller.createEnum(null, clazz);
         } else if (clazz.isInterface() || isAbstractClass(clazz)) {
             T simpleImpl = dynamicClassGenerator.createSimpleInstanceOfInterfaceOrAbstract(clazz);
-            fill(simpleImpl, simpleImpl.getClass(), recursionCounter);
+            fill(simpleImpl, simpleImpl.getClass(), recursionCounter, ignoreFields);
             return simpleImpl;
         } else {
-            return (T) extractPlainConstructor(clazz)
+            return (T) extractPlainConstructor(clazz, usePrivateConstructor)
                     .map(this::newInstance)
-                    .map(instance -> fill(instance, clazz, recursionCounter))
+                    .map(instance -> fill(instance, clazz, recursionCounter, ignoreFields))
                     .orElse(null);
         }
     }
 
-    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter) {
+    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, List<String> ignoreFields) {
 
         getAllFields(clazz)
+                .filter(field -> !ignoreFields.contains(field.getName()))
                 .filter(ReflectionUtils::isNotFinal)
                 .filter(ReflectionUtils::isNotRelevantForCoverage)
-                .forEach(field -> fillField(instance, field, recursionCounter));
+                .forEach(field -> fillField(instance, field, recursionCounter, clazz));
 
         return instance;
     }
 
     @SneakyThrows
-    private void fillField(Object instance, Field field, int recursionCounter) {
+    private void fillField(Object instance, Field field, int recursionCounter, Class clazz) {
         field.setAccessible(true);
         Object value = createRandomValueForField(field);
 
@@ -155,7 +162,12 @@ public class TestDataFiller {
         }
 
         if (value != null) {
-            field.set(instance, value);
+            Optional<Method> possibleSetterForField = findPossibleSetterForField(clazz, field);
+            if (possibleSetterForField.isPresent()) {
+                possibleSetterForField.get().invoke(instance, value);
+            } else {
+                field.set(instance, value);
+            }
         }
     }
 
@@ -186,9 +198,10 @@ public class TestDataFiller {
         return constructor.newInstance();
     }
 
-    private Optional<Constructor> extractPlainConstructor(Class clazz) {
-        for (Constructor<?> constructor : clazz.getConstructors()) {
-            if (constructor.getParameterCount() == 0) {
+    private Optional<Constructor> extractPlainConstructor(Class clazz, boolean usePrivateConstructor) {
+        for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+            if (constructor.getParameterCount() == 0 && (isPublic(constructor) || usePrivateConstructor)) {
+                constructor.setAccessible(true);
                 return Optional.of(constructor);
             }
         }

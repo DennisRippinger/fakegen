@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static de.drippinger.fakegen.util.ReflectionUtils.getAllMethods;
+import static de.drippinger.fakegen.util.StringUtils.firstLowerCase;
+import static de.drippinger.fakegen.util.StringUtils.titleCase;
 
 /**
  * @author Dennis Rippinger
@@ -92,13 +94,5 @@ public class DynamicClassGenerator {
         return builder;
     }
 
-    private String titleCase(String name) {
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
-    }
-
-
-    private String firstLowerCase(String name) {
-        return name.substring(0, 1).toLowerCase() + name.substring(1);
-    }
 
 }

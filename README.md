@@ -1,5 +1,5 @@
 # Fakegen
-[![Build Status](https://travis-ci.com/DennisRippinger/fakegen.svg?branch=master)](https://travis-ci.com/DennisRippinger/fakegen)
+[![Build Status](https://img.shields.io/travis/com/DennisRippinger/fakegen.svg)](https://travis-ci.com/DennisRippinger/fakegen)
 [![Coveralls](https://img.shields.io/coveralls/github/DennisRippinger/fakegen.svg)](https://coveralls.io/github/DennisRippinger/fakegen?branch=master)
 
 

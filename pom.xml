@@ -80,7 +80,7 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
                 <configuration>
-                    <scanForSources>true</scanForSources>
+                    <sourceDirectories>test-immutables/target/generated-sources/annotations/</sourceDirectories>
                 </configuration>
             </plugin>
             <plugin>
@@ -94,6 +94,7 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
                 </executions>
             </plugin>
         </plugins>

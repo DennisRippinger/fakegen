@@ -30,6 +30,7 @@
         <module>fakegen-core</module>
         <module>fakegen-junit4</module>
         <module>fakegen-junit5</module>
+        <module>fakegen-benchmark</module>
         <module>test-immutables</module>
     </modules>
 

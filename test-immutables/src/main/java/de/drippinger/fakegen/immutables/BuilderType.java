@@ -1,4 +1,4 @@
-package de.drippinger.fakegen;
+package de.drippinger.fakegen.immutables;
 
 
 import org.immutables.value.Value;

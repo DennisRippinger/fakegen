@@ -1,6 +1,5 @@
-import de.drippinger.fakegen.BuilderType;
-import de.drippinger.fakegen.ImmutableBuilderType;
-import de.drippinger.fakegen.SimpleEnum;
+package de.drippinger.fakegen.immutables;
+
 import de.drippinger.fakegen.TestDataFiller;
 import org.junit.jupiter.api.Test;
 

@@ -63,7 +63,7 @@ public class TestDataFiller {
 
 
     public <T> T createFromBuilder(Class<T> clazz) {
-        return createRandomFilledInstanceInternal(clazz, 0, true, singletonList("initBits"));
+        return createRandomFilledInstanceInternal(clazz, 0, true, singletonList("initBits"), true);
     }
 
     public <T> T createRandomFilledByFactory(Class<T> clazz) {
@@ -118,10 +118,10 @@ public class TestDataFiller {
     }
 
     private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter) {
-        return createRandomFilledInstanceInternal(clazz, recursionCounter, false, Collections.emptyList());
+        return createRandomFilledInstanceInternal(clazz, recursionCounter, false, Collections.emptyList(), false);
     }
 
-    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor, List<String> ignoreFields) {
+    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor, List<String> ignoreFields, boolean useSetter) {
 
         if (objectFillerFactoryMethods.containsKey(clazz)) {
             Method method = objectFillerFactoryMethods.get(clazz);
@@ -130,30 +130,29 @@ public class TestDataFiller {
             return (T) objectFiller.createEnum(null, clazz);
         } else if (clazz.isInterface() || isAbstractClass(clazz)) {
             T simpleImpl = dynamicClassGenerator.createSimpleInstanceOfInterfaceOrAbstract(clazz);
-            fill(simpleImpl, simpleImpl.getClass(), recursionCounter, ignoreFields);
+            fill(simpleImpl, simpleImpl.getClass(), recursionCounter, ignoreFields, useSetter);
             return simpleImpl;
         } else {
             return (T) extractPlainConstructor(clazz, usePrivateConstructor)
                     .map(this::newInstance)
-                    .map(instance -> fill(instance, clazz, recursionCounter, ignoreFields))
+                    .map(instance -> fill(instance, clazz, recursionCounter, ignoreFields, useSetter))
                     .orElse(null);
         }
     }
 
-    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, List<String> ignoreFields) {
+    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, List<String> ignoreFields, boolean useSetter) {
 
         getAllFields(clazz)
                 .filter(field -> !ignoreFields.contains(field.getName()))
                 .filter(ReflectionUtils::isNotFinal)
                 .filter(ReflectionUtils::isNotRelevantForCoverage)
-                .forEach(field -> fillField(instance, field, recursionCounter, clazz));
+                .forEach(field -> fillField(instance, field, recursionCounter, clazz, useSetter));
 
         return instance;
     }
 
     @SneakyThrows
-    private void fillField(Object instance, Field field, int recursionCounter, Class clazz) {
-        field.setAccessible(true);
+    private void fillField(Object instance, Field field, int recursionCounter, Class clazz, boolean useSetter) {
         Object value = createRandomValueForField(field);
 
         if (value == null && recursionCounter < 1) {
@@ -162,11 +161,14 @@ public class TestDataFiller {
         }
 
         if (value != null) {
-            Optional<Method> possibleSetterForField = findPossibleSetterForField(clazz, field);
-            if (possibleSetterForField.isPresent()) {
-                possibleSetterForField.get().invoke(instance, value);
-            } else {
+            if (isNotFinal(field) && !useSetter) {
+                field.setAccessible(true);
                 field.set(instance, value);
+            } else {
+                Optional<Method> possibleSetterForField = findPossibleSetterForField(clazz, field);
+                if (possibleSetterForField.isPresent()) {
+                    possibleSetterForField.get().invoke(instance, value);
+                }
             }
         }
     }

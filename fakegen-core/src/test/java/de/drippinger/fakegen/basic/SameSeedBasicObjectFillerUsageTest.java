@@ -23,7 +23,7 @@ class SameSeedBasicObjectFillerUsageTest {
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getName())
                 .hasSize(10)
-                .isEqualTo("bFaeUPxE6Q");
+                .isEqualTo("Q6ExPUeaFb");
     }
 
 }

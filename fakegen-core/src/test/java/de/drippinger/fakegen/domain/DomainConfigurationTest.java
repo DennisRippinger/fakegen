@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * @author Dennis Rippinger (msg systems ag) 2018
+ * @author Dennis Rippinger
  */
 class DomainConfigurationTest {
 

@@ -2,17 +2,13 @@ package de.drippinger.fakegen.filler;
 
 import de.drippinger.fakegen.domain.DomainConfiguration;
 import de.drippinger.fakegen.domain.SimpleDomainConfiguration;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-
-import static de.drippinger.fakegen.util.ReflectionUtils.getFieldValue;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * @author Dennis Rippinger
@@ -20,7 +16,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 @SuppressWarnings("unchecked")
 public class BasicObjectFiller implements ObjectFiller {
 
-    protected AtomicLong seed;
+    protected Long seed;
 
     protected Random random;
 
@@ -28,20 +24,21 @@ public class BasicObjectFiller implements ObjectFiller {
 
     public BasicObjectFiller() {
         this.random = new Random();
-        this.seed = getFieldValue(random, "seed");
+        this.seed = random.nextLong();
+        this.random.setSeed(seed);
 
         domainConfiguration.init(random);
     }
 
     public BasicObjectFiller(Long seed) {
-        this.seed = new AtomicLong(seed);
+        this.seed = seed;
         this.random = new Random(seed);
 
         domainConfiguration.init(random);
     }
 
     public BasicObjectFiller(Long seed, DomainConfiguration domainConfiguration) {
-        this.seed = new AtomicLong(seed);
+        this.seed = seed;
         this.random = new Random(seed);
         this.domainConfiguration = domainConfiguration;
 
@@ -50,7 +47,8 @@ public class BasicObjectFiller implements ObjectFiller {
 
     public BasicObjectFiller(DomainConfiguration domainConfiguration) {
         this.random = new Random();
-        this.seed = getFieldValue(random, "seed");
+        this.seed = random.nextLong();
+        this.random.setSeed(seed);
 
         this.domainConfiguration = domainConfiguration;
         domainConfiguration.init(random);

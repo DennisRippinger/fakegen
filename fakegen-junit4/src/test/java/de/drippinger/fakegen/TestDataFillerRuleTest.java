@@ -23,7 +23,7 @@ public class TestDataFillerRuleTest {
         JUnitCore.runClasses(DataFillerRuleStub.class);
 
         assertThat(systemOutRule.getLog().trim())
-                .matches("Seed used in Test .* was \\d{2,}");
+                .matches("Seed used in Test .* was [-]?\\d{2,}");
     }
 
     @Test

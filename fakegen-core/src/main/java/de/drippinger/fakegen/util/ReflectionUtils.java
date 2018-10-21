@@ -1,7 +1,6 @@
 package de.drippinger.fakegen.util;
 
 import de.drippinger.fakegen.filler.ObjectFiller;
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.*;
@@ -145,10 +144,4 @@ public final class ReflectionUtils {
         return Modifier.isStatic(method.getModifiers());
     }
 
-    @SneakyThrows
-    public static <T> T getFieldValue(Object instance, String fieldName) {
-        Field field = instance.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return (T) field.get(instance);
-    }
 }

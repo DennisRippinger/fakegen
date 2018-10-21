@@ -96,6 +96,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/immutables/*</exclude>
+                        <exclude>**/autovalue/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>

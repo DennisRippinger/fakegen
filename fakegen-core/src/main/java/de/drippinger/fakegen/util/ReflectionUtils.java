@@ -109,7 +109,7 @@ public final class ReflectionUtils {
 
     public static Optional<Method> findPossibleSetterForField(Class clazz, Field field) {
         return Arrays
-                .stream(clazz.getMethods())
+                .stream(clazz.getDeclaredMethods())
                 .filter(method -> method.getParameterCount() == 1)
                 .filter(method -> containsIgnoreCase(method.getName(), field.getName()) ||
                         equalsIgnoreCase(method.getName(), field.getName()))

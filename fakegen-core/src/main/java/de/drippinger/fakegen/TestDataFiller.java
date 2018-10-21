@@ -167,7 +167,9 @@ public class TestDataFiller {
             } else {
                 Optional<Method> possibleSetterForField = findPossibleSetterForField(clazz, field);
                 if (possibleSetterForField.isPresent()) {
-                    possibleSetterForField.get().invoke(instance, value);
+                    Method setter = possibleSetterForField.get();
+                    setter.setAccessible(true);
+                    setter.invoke(instance, value);
                 }
             }
         }

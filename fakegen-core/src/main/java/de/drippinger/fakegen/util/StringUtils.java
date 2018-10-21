@@ -1,8 +1,11 @@
 package de.drippinger.fakegen.util;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * @author Dennis Rippinger (msg systems ag) 2018
  */
+@UtilityClass
 public final class StringUtils {
 
     public static String titleCase(String name) {

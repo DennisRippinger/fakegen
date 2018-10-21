@@ -21,10 +21,6 @@ public class TestDataFillerRule implements TestRule {
         this.testDataFiller = new TestDataFiller(new BasicObjectFiller(seed));
     }
 
-    public TestDataFillerRule(ObjectFiller objectFiller) {
-        this.testDataFiller = new TestDataFiller(objectFiller);
-    }
-
     @Override
     public Statement apply(Statement base, Description description) {
         return new Statement() {

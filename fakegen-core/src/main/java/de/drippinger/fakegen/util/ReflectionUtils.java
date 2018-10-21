@@ -2,6 +2,7 @@ package de.drippinger.fakegen.util;
 
 import de.drippinger.fakegen.filler.ObjectFiller;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -14,6 +15,7 @@ import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
  * @author Dennis Rippinger
  */
 @SuppressWarnings("unchecked")
+@UtilityClass
 public final class ReflectionUtils {
 
     private static final Set<Method> OBJECT_METHOD = new HashSet(Arrays.asList(Object.class.getMethods()));

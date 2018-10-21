@@ -2,6 +2,7 @@ package de.drippinger.fakegen;
 
 import de.drippinger.fakegen.stub.DataFillerRuleFixedStub;
 import de.drippinger.fakegen.stub.DataFillerRuleStub;
+import de.drippinger.fakegen.stub.DataFillerRuleSuccessStub;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
@@ -31,6 +32,13 @@ public class TestDataFillerRuleTest {
 
         assertThat(systemOutRule.getLog().trim())
                 .matches("Seed used in Test .* was 1");
+    }
+
+    @Test
+    public void should_not_write_fixed_seed_in_success_case() {
+        JUnitCore.runClasses(DataFillerRuleSuccessStub.class);
+
+        assertThat(systemOutRule.getLog().trim()).isEqualTo("");
     }
 
 }

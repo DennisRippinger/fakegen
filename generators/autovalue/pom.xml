@@ -15,13 +15,13 @@
         <dependency>
             <groupId>com.google.auto.value</groupId>
             <artifactId>auto-value</artifactId>
-            <version>1.6.2</version>
+            <version>${auto-value.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.auto.value</groupId>
             <artifactId>auto-value-annotations</artifactId>
-            <version>1.6.2</version>
+            <version>${auto-value.version}</version>
         </dependency>
         <dependency>
             <groupId>de.drippinger</groupId>

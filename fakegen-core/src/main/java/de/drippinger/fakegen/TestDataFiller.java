@@ -66,6 +66,10 @@ public class TestDataFiller {
         return createRandomFilledInstanceInternal(clazz, 0, true, singletonList("initBits"), true);
     }
 
+    public <T> T createFromBuilder(T instance) {
+        return (T) fill(instance, instance.getClass(), 0, Collections.emptyList(), false);
+    }
+
     public <T> T createRandomFilledByFactory(Class<T> clazz) {
         try {
 

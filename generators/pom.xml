@@ -17,6 +17,7 @@
         <module>immutables</module>
         <module>autovalue</module>
         <module>freebuilder</module>
+        <module>lombok</module>
     </modules>
 
     <build>

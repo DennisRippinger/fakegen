@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 
 import static de.drippinger.fakegen.exception.ExceptionHelper.createExceptionMessage;
 import static de.drippinger.fakegen.util.ReflectionUtils.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 
 /**
@@ -63,11 +65,11 @@ public class TestDataFiller {
 
 
     public <T> T createFromBuilder(Class<T> clazz) {
-        return createRandomFilledInstanceInternal(clazz, 0, true, singletonList("initBits"), true);
+        return createRandomFilledInstanceInternal(clazz, 0, true, singleton("initBits"), true);
     }
 
     public <T> T createFromBuilder(T instance) {
-        return (T) fill(instance, instance.getClass(), 0, Collections.emptyList(), false);
+        return (T) fill(instance, instance.getClass(), 0, emptySet(), false);
     }
 
     public <T> T createRandomFilledByFactory(Class<T> clazz) {
@@ -122,10 +124,10 @@ public class TestDataFiller {
     }
 
     private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter) {
-        return createRandomFilledInstanceInternal(clazz, recursionCounter, false, Collections.emptyList(), false);
+        return createRandomFilledInstanceInternal(clazz, recursionCounter, false, emptySet(), false);
     }
 
-    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor, List<String> ignoreFields, boolean useSetter) {
+    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor, Set<String> ignoreFields, boolean useSetter) {
 
         if (objectFillerFactoryMethods.containsKey(clazz)) {
             Method method = objectFillerFactoryMethods.get(clazz);
@@ -144,7 +146,7 @@ public class TestDataFiller {
         }
     }
 
-    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, List<String> ignoreFields, boolean useSetter) {
+    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, Set<String> ignoreFields, boolean useSetter) {
 
         getAllFields(clazz)
                 .filter(field -> !ignoreFields.contains(field.getName()))

@@ -1,7 +1,9 @@
 package de.drippinger.fakegen.exception;
 
 import de.drippinger.fakegen.MethodHolder;
+import lombok.experimental.UtilityClass;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -11,7 +13,32 @@ import static de.drippinger.fakegen.util.LevenstheinDistance.editDistance;
 /**
  * @author Dennis Rippinger
  */
+@UtilityClass
 public final class ExceptionHelper {
+
+    public static String createExceptionMessage(Class clazz, String fieldName) {
+        String similarName = "";
+        for (Field field : clazz.getDeclaredFields()) {
+            int editDistance = editDistance(field.getName(), fieldName);
+
+            if (editDistance < 5) {
+                similarName = field.getName();
+                break;
+            }
+        }
+
+        if (similarName != null) {
+            return String.format(
+                    "Could not find field `%s`, but a similar named one called `%s` was found.",
+                    fieldName,
+                    similarName);
+        }
+
+        return String.format(
+                "Could not find method `%s`, maybe a refactoring missed the string.",
+                fieldName);
+    }
+
 
     public static String createExceptionMessage(Class clazz, MethodHolder methodHolder) {
         String similarMethod = null;

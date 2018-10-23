@@ -16,7 +16,6 @@ import static de.drippinger.fakegen.exception.ExceptionHelper.createExceptionMes
 import static de.drippinger.fakegen.util.ReflectionUtils.*;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 
 /**
  * @author Dennis Rippinger
@@ -61,6 +60,19 @@ public class TestDataFiller {
 
     public <T> T createRandomFilledInstance(Class<T> clazz) {
         return createRandomFilledInstanceInternal(clazz, 0);
+    }
+
+    public <T> List<T> createRandomFilledInstance(Class<T> clazz, int amount) {
+        if (amount < 0) {
+            throw new FakegenException("Can not handle negative amount");
+        }
+
+        List<T> result = new ArrayList(amount + 1);
+        for (int i = 0; i < amount; i++) {
+            result.add(createRandomFilledInstance(clazz));
+        }
+
+        return result;
     }
 
 

@@ -34,6 +34,13 @@
         <module>generators</module>
     </modules>
 
+    <scm>
+        <connection>scm:git:git@github.com:DennisRippinger/fakegen.git</connection>
+        <developerConnection>scm:git:git@github.com:DennisRippinger/fakegen.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/DennisRippinger/fakegen</url>
+    </scm>
+
     <properties>
         <?SORTPOM IGNORE?>
         <maven.compiler.source>1.8</maven.compiler.source>

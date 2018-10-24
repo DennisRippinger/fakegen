@@ -51,7 +51,7 @@ public class TestDataFiller {
         this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(objectFiller);
     }
 
-    public <T> T createRandomFilledInstanceAndApply(Class<T> clazz, Consumer<T> consumer) {
+    public <T> T createRandomFilledInstance(Class<T> clazz, Consumer<T> consumer) {
         T randomFilledInstance = createRandomFilledInstanceInternal(clazz, 0);
         consumer.accept(randomFilledInstance);
 

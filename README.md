@@ -16,7 +16,7 @@ The simplest use case could look similar to the following:
 ```java
 TestDataFiller tdf = new TestDataFiller();
 SomeEntity entity = tdf
-    .createRandomFilledInstanceAndApply(SomeEntity.class, instance -> instance.setGreeting("Hello World"));
+    .createRandomFilledInstance(SomeEntity.class, instance -> instance.setGreeting("Hello World"));
 
 System.out.println(entity);
 // SomeEntity(greetings=Hello world, birthday=2018-10-14)

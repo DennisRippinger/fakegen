@@ -47,7 +47,7 @@ class BasicObjectFillerUsageTest {
     @Test
     @DisplayName("Should use a consumer")
     void createRandomFilledInstance_apply_consumer() {
-        SimpleType randomFilledInstance = filler.createRandomFilledInstanceAndApply(
+        SimpleType randomFilledInstance = filler.createRandomFilledInstance(
                 SimpleType.class,
                 simpleType -> simpleType.setName("Dennis")
         );

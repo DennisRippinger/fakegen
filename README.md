@@ -33,8 +33,12 @@ One can build them specific for a test, but it makes more sense to create a proj
 ```java
 public class TestConfiguration extends DomainConfiguration {
 
+    public TestConfiguration(Random random) {
+        super(random);
+    }
+
     @Override
-    public void init(Random random) {
+    public void init(Random random, TestDataFiller testDataFiller) {
         Faker faker = new Faker(random);
 
         this.fieldForStringShouldUse("name", () -> faker.name().firstName());
@@ -44,7 +48,7 @@ public class TestConfiguration extends DomainConfiguration {
 Here done together with the cool [Faker library](https://github.com/DiUS/java-faker).
 
 ```java
-TestDataFiller tdf = new TestDataFiller(new TestConfiguration());
+TestDataFiller tdf = new TestDataFiller(TestConfiguration.class);
 
 SimpleType entity = tdf.createRandomFilledInstance(SimpleType.class);
 System.out.println(entity.getName());

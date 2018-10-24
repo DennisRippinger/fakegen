@@ -1,5 +1,7 @@
 package de.drippinger.fakegen;
 
+import de.drippinger.fakegen.domain.DomainConfiguration;
+import lombok.experimental.Delegate;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -9,6 +11,7 @@ import org.junit.runners.model.Statement;
  */
 public class TestDataFillerRule implements TestRule {
 
+    @Delegate
     private final TestDataFiller testDataFiller;
 
     public TestDataFillerRule() {
@@ -17,6 +20,14 @@ public class TestDataFillerRule implements TestRule {
 
     public TestDataFillerRule(Long seed) {
         this.testDataFiller = new TestDataFiller(seed);
+    }
+
+    public TestDataFillerRule(Class<? extends DomainConfiguration> clazz) {
+        testDataFiller = new TestDataFiller(clazz);
+    }
+
+    public TestDataFillerRule(Class<? extends DomainConfiguration> clazz, Long seed) {
+        testDataFiller = new TestDataFiller(clazz, seed);
     }
 
     @Override

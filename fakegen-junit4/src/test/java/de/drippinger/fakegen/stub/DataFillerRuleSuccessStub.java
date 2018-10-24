@@ -14,6 +14,7 @@ public class DataFillerRuleSuccessStub {
 
     @Test
     public void successfulTestShouldNotPrintSeed() {
+        testData.createRandomFilledInstance(String.class);
         // NOP
     }
 

@@ -1,6 +1,6 @@
 package de.drippinger.fakegen.util;
 
-import de.drippinger.fakegen.filler.ObjectFiller;
+import de.drippinger.fakegen.domain.ObjectFiller;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.*;

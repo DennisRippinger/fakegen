@@ -1,7 +1,6 @@
 package de.drippinger.fakegen.basic;
 
 import de.drippinger.fakegen.TestDataFiller;
-import de.drippinger.fakegen.filler.BasicObjectFiller;
 import de.drippinger.fakegen.types.AbstractType;
 import de.drippinger.fakegen.types.InterfaceType;
 import de.drippinger.fakegen.types.NestedInterfaceType;
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class UninstanciableTest {
 
-    private TestDataFiller filler = new TestDataFiller(new BasicObjectFiller());
+    private TestDataFiller filler = new TestDataFiller();
 
     @Test
     @DisplayName("Should fill an interface Type by creating a simple Impl of it")

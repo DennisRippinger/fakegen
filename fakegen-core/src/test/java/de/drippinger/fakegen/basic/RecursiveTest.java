@@ -1,7 +1,6 @@
 package de.drippinger.fakegen.basic;
 
 import de.drippinger.fakegen.TestDataFiller;
-import de.drippinger.fakegen.filler.BasicObjectFiller;
 import de.drippinger.fakegen.types.RecursiveType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class RecursiveTest {
 
-    private TestDataFiller filler = new TestDataFiller(new BasicObjectFiller());
+    private TestDataFiller filler = new TestDataFiller();
 
     @Test
     @DisplayName("Should fill a recursive Type once")

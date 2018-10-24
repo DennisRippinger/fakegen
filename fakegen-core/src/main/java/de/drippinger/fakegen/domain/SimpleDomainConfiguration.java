@@ -1,5 +1,7 @@
 package de.drippinger.fakegen.domain;
 
+import de.drippinger.fakegen.TestDataFiller;
+
 import java.util.Random;
 
 /**
@@ -7,8 +9,13 @@ import java.util.Random;
  */
 public class SimpleDomainConfiguration extends DomainConfiguration {
 
-    public void init(Random random) {
-        // NOP because it is the default case.
+    public SimpleDomainConfiguration(Random random) {
+        super(random);
+    }
+
+    @Override
+    public void init(Random random, TestDataFiller testDataFiller) {
+        // NOP
     }
 
 }

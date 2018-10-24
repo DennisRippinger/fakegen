@@ -1,6 +1,4 @@
-package de.drippinger.fakegen.filler;
-
-import de.drippinger.fakegen.domain.DomainConfiguration;
+package de.drippinger.fakegen.domain;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -15,10 +13,6 @@ import java.util.Set;
  * @author Dennis Rippinger
  */
 public interface ObjectFiller {
-
-    void setDomainConfiguration(DomainConfiguration domainConfiguration);
-
-    String getSeed();
 
     String createString(String fieldName);
 

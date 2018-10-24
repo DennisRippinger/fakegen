@@ -19,17 +19,21 @@ class DomainFixedSeedTest {
     @RepeatedTest(3)
     @DisplayName("Should use Domain Specific Configuration with static seed")
     void should_Use_Domain_Specific_Values() {
-        TestDataFiller tdf = new TestDataFiller(123L, new TestConfiguration());
+        TestDataFiller tdf = new TestDataFiller(TestConfiguration.class, 123L);
 
         SimpleType randomFilledInstance = tdf.createRandomFilledInstance(SimpleType.class);
 
         assertThat(randomFilledInstance.getName()).isEqualTo("Jayne");
     }
 
-    private class TestConfiguration extends DomainConfiguration {
+    public static class TestConfiguration extends DomainConfiguration {
+
+        public TestConfiguration(Random random) {
+            super(random);
+        }
 
         @Override
-        public void init(Random random) {
+        public void init(Random random, TestDataFiller testDataFiller) {
             Faker faker = new Faker(random);
 
             this.fieldForStringShouldUse("name", () -> faker.name().firstName());

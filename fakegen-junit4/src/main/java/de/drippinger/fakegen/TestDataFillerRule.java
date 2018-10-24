@@ -1,7 +1,5 @@
 package de.drippinger.fakegen;
 
-import de.drippinger.fakegen.filler.BasicObjectFiller;
-import de.drippinger.fakegen.filler.ObjectFiller;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -14,11 +12,11 @@ public class TestDataFillerRule implements TestRule {
     private final TestDataFiller testDataFiller;
 
     public TestDataFillerRule() {
-        this.testDataFiller = new TestDataFiller(new BasicObjectFiller());
+        this.testDataFiller = new TestDataFiller();
     }
 
     public TestDataFillerRule(Long seed) {
-        this.testDataFiller = new TestDataFiller(new BasicObjectFiller(seed));
+        this.testDataFiller = new TestDataFiller(seed);
     }
 
     @Override

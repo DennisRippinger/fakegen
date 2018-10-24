@@ -1,7 +1,6 @@
 package de.drippinger.fakegen.basic;
 
 import de.drippinger.fakegen.TestDataFiller;
-import de.drippinger.fakegen.filler.BasicObjectFiller;
 import de.drippinger.fakegen.types.BoxedType;
 import de.drippinger.fakegen.types.PrimitiveType;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class BoxedAndValueTest {
 
-    private TestDataFiller filler = new TestDataFiller(new BasicObjectFiller());
+    private TestDataFiller filler = new TestDataFiller();
 
     @Test
     @DisplayName("Should fill an object with boxed types")

@@ -1,9 +1,8 @@
 package de.drippinger.fakegen;
 
 import de.drippinger.fakegen.domain.DomainConfiguration;
+import de.drippinger.fakegen.domain.SimpleDomainConfiguration;
 import de.drippinger.fakegen.exception.FakegenException;
-import de.drippinger.fakegen.filler.BasicObjectFiller;
-import de.drippinger.fakegen.filler.ObjectFiller;
 import de.drippinger.fakegen.uninstanciable.DynamicClassGenerator;
 import de.drippinger.fakegen.util.ReflectionUtils;
 import lombok.SneakyThrows;
@@ -23,32 +22,53 @@ import static java.util.Collections.singleton;
 @SuppressWarnings("unchecked")
 public class TestDataFiller {
 
-    private final ObjectFiller objectFiller;
+    private final DynamicClassGenerator dynamicClassGenerator = new DynamicClassGenerator();
 
-    private final DynamicClassGenerator dynamicClassGenerator;
+    private final DomainConfiguration domainConfiguration;
 
     private final Map<Type, Method> objectFillerFactoryMethods;
 
+    private final Random random;
+
+    private final Long seed;
+
+
     public TestDataFiller() {
-        this(new BasicObjectFiller());
+        this.random = new Random();
+        this.domainConfiguration = new SimpleDomainConfiguration(this.random);
+        this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(domainConfiguration);
+        this.seed = random.nextLong();
+        random.setSeed(seed);
+
+        domainConfiguration.init(this.random, this);
     }
 
     public TestDataFiller(Long seed) {
-        this(new BasicObjectFiller(seed));
+        this.random = new Random(seed);
+        this.seed = seed;
+        this.domainConfiguration = new SimpleDomainConfiguration(random);
+        this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(domainConfiguration);
+
+        domainConfiguration.init(random, this);
     }
 
-    public TestDataFiller(Long seed, DomainConfiguration domainConfiguration) {
-        this(new BasicObjectFiller(seed, domainConfiguration));
+    public TestDataFiller(Class<? extends DomainConfiguration> clazz) {
+        this.random = new Random();
+        this.domainConfiguration = (DomainConfiguration) newInstance(clazz, random);
+        this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(domainConfiguration);
+        this.seed = random.nextLong();
+        random.setSeed(seed);
+
+        domainConfiguration.init(random, this);
     }
 
-    public TestDataFiller(DomainConfiguration domainConfiguration) {
-        this(new BasicObjectFiller(domainConfiguration));
-    }
+    public TestDataFiller(Class<? extends DomainConfiguration> clazz, Long seed) {
+        this.random = new Random(seed);
+        this.seed = seed;
+        this.domainConfiguration = (DomainConfiguration) newInstance(clazz, random);
+        this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(domainConfiguration);
 
-    public TestDataFiller(ObjectFiller objectFiller) {
-        this.objectFiller = objectFiller;
-        this.dynamicClassGenerator = new DynamicClassGenerator();
-        this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(objectFiller);
+        domainConfiguration.init(random, this);
     }
 
     public <T> T createRandomFilledInstance(Class<T> clazz, Consumer<T> consumer) {
@@ -131,10 +151,6 @@ public class TestDataFiller {
     }
 
 
-    public String getSeed() {
-        return objectFiller.getSeed();
-    }
-
     private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter) {
         return createRandomFilledInstanceInternal(clazz, recursionCounter, false, emptySet(), false);
     }
@@ -145,7 +161,7 @@ public class TestDataFiller {
             Method method = objectFillerFactoryMethods.get(clazz);
             return (T) callFactoryMethod(null, method);
         } else if (clazz.isEnum()) {
-            return (T) objectFiller.createEnum(null, clazz);
+            return (T) domainConfiguration.createEnum(null, clazz);
         } else if (clazz.isInterface() || isAbstractClass(clazz)) {
             T simpleImpl = dynamicClassGenerator.createSimpleInstanceOfInterfaceOrAbstract(clazz);
             fill(simpleImpl, simpleImpl.getClass(), recursionCounter, ignoreFields, useSetter);
@@ -199,7 +215,7 @@ public class TestDataFiller {
         String fieldName = field.getName();
 
         if (type.isEnum()) {
-            return objectFiller.createEnum(fieldName, type);
+            return domainConfiguration.createEnum(fieldName, type);
         }
 
         Method method = objectFillerFactoryMethods.get(type);
@@ -210,14 +226,31 @@ public class TestDataFiller {
         return null;
     }
 
+
+    public Long getSeed() {
+        return seed;
+    }
+
     @SneakyThrows
     private Object callFactoryMethod(String fieldName, Method method) {
-        return method.invoke(objectFiller, fieldName);
+        return method.invoke(domainConfiguration, fieldName);
     }
 
     @SneakyThrows
     private Object newInstance(Constructor constructor) {
         return constructor.newInstance();
+    }
+
+    private Object newInstance(Class clazz, Random random) {
+        try {
+            return clazz
+                    .getDeclaredConstructor(Random.class)
+                    .newInstance(random);
+        } catch (ReflectiveOperationException e) {
+            throw new FakegenException("Could not find Constructor with Random as parameter. " +
+                    "If it is an inner class, is is static?", e);
+        }
+
     }
 
     private Optional<Constructor> extractPlainConstructor(Class clazz, boolean usePrivateConstructor) {

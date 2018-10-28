@@ -4,9 +4,7 @@ import de.drippinger.fakegen.TestDataFiller;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -163,4 +161,40 @@ public abstract class DomainConfiguration implements ObjectFiller {
                 });
     }
 
+    public Byte createByte(String fieldName) {
+        return getSupplierValue(fieldName, Byte.class)
+                .orElseGet(() -> {
+                    byte[] bytes = new byte[1];
+                    random.nextBytes(bytes);
+
+                    return bytes[0];
+                });
+    }
+
+    public Character createChar(String fieldName) {
+        return getSupplierValue(fieldName, Character.class)
+                .orElseGet(() -> (char) random.nextInt(126));
+    }
+
+    public Instant createInstant(String fieldName) {
+        return getSupplierValue(fieldName, Instant.class)
+                .orElseGet(Instant::now);
+    }
+
+    public Period createPeriod(String fieldName) {
+        return getSupplierValue(fieldName, Period.class)
+                .orElseGet(() -> Period.ofDays(random.nextInt(7)));
+    }
+
+    public ZonedDateTime createZonedDateTime(String fieldName) {
+        return getSupplierValue(fieldName, ZonedDateTime.class)
+                .orElseGet(ZonedDateTime::now);
+    }
+
+    public Calendar createCalendar(String fieldName) {
+        return getSupplierValue(fieldName, Calendar.class)
+                .orElseGet(Calendar::getInstance);
+    }
+
 }
+

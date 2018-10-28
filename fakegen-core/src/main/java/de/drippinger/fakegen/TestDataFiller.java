@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static de.drippinger.fakegen.exception.ExceptionHelper.createExceptionMessage;
+import static de.drippinger.fakegen.util.Ignore.isJvmRelevant;
 import static de.drippinger.fakegen.util.ReflectionUtils.*;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -157,12 +158,14 @@ public class TestDataFiller {
 
     private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor, Set<String> ignoreFields, boolean useSetter) {
 
-        if (objectFillerFactoryMethods.containsKey(clazz)) {
+         if (objectFillerFactoryMethods.containsKey(clazz)) {
             Method method = objectFillerFactoryMethods.get(clazz);
             return (T) callFactoryMethod(null, method);
+        } else if (isJvmRelevant(clazz)) {
+            return null;
         } else if (clazz.isEnum()) {
             return (T) domainConfiguration.createEnum(null, clazz);
-        } else if (clazz.isInterface() || isAbstractClass(clazz)) {
+        } else if (possibleForByteBuddy(clazz)) {
             T simpleImpl = dynamicClassGenerator.createSimpleInstanceOfInterfaceOrAbstract(clazz);
             fill(simpleImpl, simpleImpl.getClass(), recursionCounter, ignoreFields, useSetter);
             return simpleImpl;
@@ -172,6 +175,25 @@ public class TestDataFiller {
                     .map(instance -> fill(instance, clazz, recursionCounter, ignoreFields, useSetter))
                     .orElse(null);
         }
+    }
+
+    private <T> boolean possibleForByteBuddy(Class<T> clazz) {
+        Package aPackage = clazz.getPackage();
+
+        if (aPackage != null) {
+            return
+                    !aPackage.getName().startsWith("java") &&
+                            !aPackage.getName().startsWith("sun") &&
+                            !aPackage.getName().startsWith("com.sun") &&
+                            (
+                                    clazz.isInterface() ||
+                                            (isAbstractClass(clazz) &&
+                                                    isNotFinal(clazz))
+                            );
+        }
+
+        return false;
+
     }
 
     private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, Set<String> ignoreFields, boolean useSetter) {
@@ -254,6 +276,11 @@ public class TestDataFiller {
     }
 
     private Optional<Constructor> extractPlainConstructor(Class clazz, boolean usePrivateConstructor) {
+
+        if (clazz.isInterface() || isAbstractClass(clazz)) {
+            return Optional.empty();
+        }
+
         for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
             if (constructor.getParameterCount() == 0 && (isPublic(constructor) || usePrivateConstructor)) {
                 constructor.setAccessible(true);

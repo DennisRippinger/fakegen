@@ -7,11 +7,14 @@ import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.ToStringMethod;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static de.drippinger.fakegen.util.ReflectionUtils.getAllMethods;
+import static de.drippinger.fakegen.util.ReflectionUtils.isAbstractClass;
 import static de.drippinger.fakegen.util.StringUtils.firstLowerCase;
 import static de.drippinger.fakegen.util.StringUtils.titleCase;
 
@@ -58,7 +61,7 @@ public class DynamicClassGenerator {
 
             builder = addGetMethodImpl(builder, method);
 
-            builder = addBooleanMethodImpl(builder, method);
+            builder = addBooleanMethodImpl(builder, method, type);
         }
 
         builder = addToStringMethodImpl(builder);
@@ -72,13 +75,24 @@ public class DynamicClassGenerator {
         return builder;
     }
 
-    private <T> Builder<T> addBooleanMethodImpl(Builder<T> builder, Method method) {
+    private <T> Builder<T> addBooleanMethodImpl(Builder<T> builder, Method method, Class<?> type) {
         if (method.getName().startsWith("is") && method.getName().length() > 2) {
             String name = firstLowerCase(method.getName().substring(2, method.getName().length()));
 
-            builder = builder.defineField(name, method.getReturnType(), Visibility.PRIVATE)
-                    .defineMethod("is" + titleCase(name), method.getReturnType(), Visibility.PUBLIC)
-                    .intercept(FieldAccessor.ofField(name));
+            boolean containsField = false;
+            if (isAbstractClass(type)) {
+                containsField = Arrays
+                        .stream(type.getDeclaredFields())
+                        .map(Field::getName)
+                        .anyMatch(s -> s.equals(name));
+            }
+
+            if (!containsField) {
+                builder = builder.defineField(name, method.getReturnType(), Visibility.PRIVATE)
+                        .defineMethod("is" + titleCase(name), method.getReturnType(), Visibility.PUBLIC)
+                        .intercept(FieldAccessor.ofField(name));
+            }
+
         }
         return builder;
     }

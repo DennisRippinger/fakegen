@@ -128,6 +128,10 @@ public final class ReflectionUtils {
         return !Modifier.isFinal(field.getModifiers());
     }
 
+    public static boolean isNotFinal(Class clazz) {
+        return !Modifier.isFinal(clazz.getModifiers());
+    }
+
     public static boolean isPublic(Member member) {
         return Modifier.isPublic(member.getModifiers());
     }

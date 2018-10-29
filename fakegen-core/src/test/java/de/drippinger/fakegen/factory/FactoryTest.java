@@ -79,4 +79,25 @@ class FactoryTest {
                         "but valid could be the Parameter set: `String.class`");
     }
 
+
+    @Test
+    void should_return_null_on_no_factory() {
+        TestDataFiller tdf = new TestDataFiller();
+
+        SimpleType fromBuilder = tdf.createRandomFilledByFactory(SimpleType.class);
+
+        assertThat(fromBuilder).isNull();
+
+    }
+
+    @Test
+    void should_throw_exception_if_no_factory_present() {
+        TestDataFiller tdf = new TestDataFiller();
+
+        SimpleType fromBuilder = tdf.createRandomFilledByFactory(SimpleType.class);
+
+        assertThat(fromBuilder).isNull();
+
+    }
+
 }

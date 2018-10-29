@@ -27,4 +27,18 @@ class SimpleTypeTest {
                 .isNotNull()
                 .hasSize(10);
     }
+
+    @Test
+    void should_use_class_builder() {
+        SimpleBuilderType fromBuilder = filler.createFromBuilder(SimpleBuilderType.builder().getClass())
+                .simpleEnum(SimpleEnum.VALUE_2)
+                .build();
+
+        assertThat(fromBuilder.getSimpleEnum()).isEqualTo(SimpleEnum.VALUE_2);
+        assertThat(fromBuilder.getBirthday()).isToday();
+        assertThat(fromBuilder.getName())
+                .isNotNull()
+                .hasSize(10);
+    }
+
 }

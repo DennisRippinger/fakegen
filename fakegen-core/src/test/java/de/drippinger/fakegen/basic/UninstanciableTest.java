@@ -6,6 +6,7 @@ import de.drippinger.fakegen.types.InterfaceType;
 import de.drippinger.fakegen.types.NestedInterfaceType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import sun.awt.RepaintArea;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,6 +71,14 @@ public class UninstanciableTest {
         assertThat(randomFilledInstance.toString()).matches("de\\.drippinger\\.fakegen\\.types\\.InterfaceType" +
                 "\\$SyntheticImpl\\{.*}");
 
+    }
+
+    @Test
+    @DisplayName("Should return null on jvm internal")
+    void should_return_null_on_internal() {
+        RepaintArea randomFilledInstance = filler.createRandomFilledInstance(RepaintArea.class);
+
+        assertThat(randomFilledInstance).isNull();
     }
 
 }

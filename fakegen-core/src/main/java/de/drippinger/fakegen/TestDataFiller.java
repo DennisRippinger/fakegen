@@ -18,7 +18,33 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 
 /**
- * @author Dennis Rippinger
+ * This class offers methods to create and fill an instance of a class. The intended use is for
+ * test cases where complex business logic requires non-null values for test execution, but rather
+ * as invariant than as relevant for the test execution. This forces developers to fill entities,
+ * DTOs, Pojos and alike with some data by hand. Over the time it is difficult to distinguish
+ * the variable parts from the logic triggers.
+ * <p>
+ * Use the methods of this class to create an instance of a pojo filled with (semi) random data.
+ * Once created it is only necessary to alter the logic triggers to the tests needs. Fakegen offers
+ * different methods to create instances of regular pojos and with factories and builder style
+ * pattern. An example:
+ * <pre>{@code
+ * TestDataFiller tdf = new TestDataFiller();
+ * SomeEntity entity = tdf
+ *     .createRandomFilledInstance(SomeEntity.class, instance -> instance.setGreeting("Hello World"));
+ *
+ * System.out.println(entity);
+ * // SomeEntity(greetings=Hello world, birthday=2018-10-14)
+ * }</pre>
+ *
+ * Since the pojos usually resemble some form of domain knowledge it is also possible to define
+ * a configuration that helps Fakegen to fill the object as desired. For more on this see
+ * {@link DomainConfiguration}.
+ * <p>
+ * Also it is possible to provide a static seed which is used by the underlying random class,
+ * which provides all values. In a case were the created data identify a constellation which
+ * failed the test, it is possible to replay them with the seed. See the JUnit 4 and 5 Rule
+ * and Extension for more details.
  */
 @SuppressWarnings("unchecked")
 public class TestDataFiller {
@@ -33,7 +59,9 @@ public class TestDataFiller {
 
     private final Long seed;
 
-
+    /**
+     * Creates a new instance with a {@link SimpleDomainConfiguration} and a new Random seed.
+     */
     public TestDataFiller() {
         this.random = new Random();
         this.domainConfiguration = new SimpleDomainConfiguration(this.random);
@@ -44,6 +72,11 @@ public class TestDataFiller {
         domainConfiguration.init(this.random, this);
     }
 
+    /**
+     * Creates a new instance with a {@link SimpleDomainConfiguration} with a fixed seed.
+     *
+     * @param seed the fixed seed, non null.
+     */
     public TestDataFiller(Long seed) {
         this.random = new Random(seed);
         this.seed = seed;
@@ -53,6 +86,12 @@ public class TestDataFiller {
         domainConfiguration.init(random, this);
     }
 
+    /**
+     * Creates a new instance based on a custom domain class. It will create an instance and
+     * provide the correct initialization of its random part.
+     *
+     * @param clazz the domain class definition, non null.
+     */
     public TestDataFiller(Class<? extends DomainConfiguration> clazz) {
         this.random = new Random();
         this.domainConfiguration = (DomainConfiguration) newInstance(clazz, random);
@@ -63,6 +102,13 @@ public class TestDataFiller {
         domainConfiguration.init(random, this);
     }
 
+    /**
+     * Creates a new instance based on a custom domain class. It will create an instance and
+     * provide the correct initialization of its random part by the given seed.
+     *
+     * @param clazz the domain class definition, non null.
+     * @param seed  the fixed seed, non null.
+     */
     public TestDataFiller(Class<? extends DomainConfiguration> clazz, Long seed) {
         this.random = new Random(seed);
         this.seed = seed;
@@ -72,6 +118,36 @@ public class TestDataFiller {
         domainConfiguration.init(random, this);
     }
 
+    /**
+     * Get the used seed within this instance.
+     *
+     * @return the seed.
+     */
+    public Long getSeed() {
+        return seed;
+    }
+
+    /**
+     * Creates an object of the required type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once.
+     *
+     * @param clazz the desired class, non null.
+     * @param <T>   The type of the class.
+     * @return a new filled object with random data.
+     */
+    public <T> T createRandomFilledInstance(Class<T> clazz) {
+        return createRandomFilledInstanceInternal(clazz, 0);
+    }
+
+    /**
+     * Creates an object of the required type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once.
+     *
+     * @param clazz    the desired class, non null.
+     * @param consumer lambda consumer which will be applied on the created instance.
+     * @param <T>      The type of the class.
+     * @return a new filled object with random data.
+     */
     public <T> T createRandomFilledInstance(Class<T> clazz, Consumer<T> consumer) {
         T randomFilledInstance = createRandomFilledInstanceInternal(clazz, 0);
         consumer.accept(randomFilledInstance);
@@ -79,10 +155,15 @@ public class TestDataFiller {
         return randomFilledInstance;
     }
 
-    public <T> T createRandomFilledInstance(Class<T> clazz) {
-        return createRandomFilledInstanceInternal(clazz, 0);
-    }
-
+    /**
+     * Creates a list of the required type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once.
+     *
+     * @param clazz  the desired class, non null.
+     * @param amount the required number of random instances, greater 0.
+     * @param <T>    The type of the class.
+     * @return a new filled object with random data.
+     */
     public <T> List<T> createRandomFilledInstance(Class<T> clazz, int amount) {
         if (amount < 0) {
             throw new FakegenException("Can not handle negative amount");
@@ -96,15 +177,65 @@ public class TestDataFiller {
         return result;
     }
 
-
+    /**
+     * Creates an object of the required builder type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once. The usage is optimized
+     * to work with the builder pattern of common code generators like Immutables, AutoValue and
+     * Freebuilder. An example:
+     *
+     * <pre>{@code
+     * BuilderType fromBuilder = filler
+     *      .createFromBuilder(ImmutableBuilderType.Builder.class)
+     *      .type(SimpleEnum.SOME)
+     *      .build();
+     * }</pre>
+     * <p>
+     * For Lombok better use {@link #createFromBuilder(Object)}.
+     *
+     * @param clazz the desired builder class, non null.
+     * @param <T>   The type of the class.
+     * @return a new filled builder with random data.
+     */
     public <T> T createFromBuilder(Class<T> clazz) {
         return createRandomFilledInstanceInternal(clazz, 0, true, singleton("initBits"), true);
     }
 
+    /**
+     * Creates an object of the required builder type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once. Unlike
+     * {@link #createFromBuilder(Class)} this is intended for the usage with lombok.
+     *
+     * <pre>{@code
+     * SimpleBuilderType fromBuilder = filler.createFromBuilder(SimpleBuilderType.builder())
+     *      .simpleEnum(SimpleEnum.VALUE_2)
+     *      .build();
+     * }</pre>
+     * <p>
+     * For Lombok better use {@link #createFromBuilder(Object)}.
+     *
+     * @param instance the builder instance, non null.
+     * @param <T>      The type of the class.
+     * @return a new filled builder with random data.
+     */
     public <T> T createFromBuilder(T instance) {
         return (T) fill(instance, instance.getClass(), 0, emptySet(), false);
     }
 
+
+    /**
+     * Creates an object of the required type by the usage of a Factory method. It will be recursively
+     * filled till it is composed out of basic java types or it visits the same type more than once.
+     * The method will try to identify a factory method and use it to create the instance. A factory
+     * method is static and returns the the desired type within the class with zero or more parameters.
+     * The parameters will be created by the random filler and applied to the method call.
+     * <p>
+     * This will use the first factory method it can find, which may depend on the used JVM. To define the
+     * exact method, use {@link #createRandomFilledByFactory(Class, MethodHolder)}.
+     *
+     * @param clazz the desired class containing a factory method.
+     * @param <T>   the desired type.
+     * @return a new instance created by the first found factory method.
+     */
     public <T> T createRandomFilledByFactory(Class<T> clazz) {
         try {
 
@@ -132,6 +263,25 @@ public class TestDataFiller {
 
     }
 
+    /**
+     * Creates an object of the required type by the usage of a Factory method. It will be recursively
+     * filled till it is composed out of basic java types or it visits the same type more than once.
+     * The method will the factory method defined and use it to create the instance. A factory
+     * method is static and returns the the desired type within the class with zero or more parameters.
+     * The parameters will be created by the random filler and applied to the method call. An Example:
+     * <pre>{@code
+     * BeanByFactoryType randomFilledByFactory = tdf
+     *                 .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
+     * }</pre>
+     * <p>
+     * Use {@link MethodHolder#method(String, Class[])} for convenience. In case of missing method
+     * an exception will try to identify a similar named method to identify missing refactoring or typos easier.
+     *
+     * @param clazz        the desired class containing a factory method, non null.
+     * @param methodHolder a wrapper to identify a method, non null.
+     * @param <T>          the desired type.
+     * @return a new instance created by the desired factory method.
+     */
     public <T> T createRandomFilledByFactory(Class<T> clazz, MethodHolder methodHolder) {
         try {
             Method method = methodHolder.createMethod(clazz);
@@ -156,9 +306,10 @@ public class TestDataFiller {
         return createRandomFilledInstanceInternal(clazz, recursionCounter, false, emptySet(), false);
     }
 
-    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor, Set<String> ignoreFields, boolean useSetter) {
+    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor,
+                                                     Set<String> ignoreFields, boolean useSetter) {
 
-         if (objectFillerFactoryMethods.containsKey(clazz)) {
+        if (objectFillerFactoryMethods.containsKey(clazz)) {
             Method method = objectFillerFactoryMethods.get(clazz);
             return (T) callFactoryMethod(null, method);
         } else if (isJvmRelevant(clazz)) {
@@ -246,11 +397,6 @@ public class TestDataFiller {
         }
 
         return null;
-    }
-
-
-    public Long getSeed() {
-        return seed;
     }
 
     @SneakyThrows

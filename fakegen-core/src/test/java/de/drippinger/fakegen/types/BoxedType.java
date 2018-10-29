@@ -20,4 +20,8 @@ public class BoxedType {
 
     private Boolean someBoolean;
 
+    private Byte someByte;
+
+    private Character someChar;
+
 }

@@ -37,6 +37,12 @@ class BoxedAndValueTest {
         assertThat(randomFilledInstance.getSomeShort())
                 .isNotNull()
                 .isNotEqualTo(0);
+        assertThat(randomFilledInstance.getSomeByte())
+                .isNotNull()
+                .isNotEqualTo(Byte.valueOf("0"));
+        assertThat(randomFilledInstance.getSomeChar())
+                .isNotNull()
+                .isNotEqualTo("");
 
     }
 
@@ -61,6 +67,12 @@ class BoxedAndValueTest {
         assertThat(randomFilledInstance.getSomeShort())
                 .isNotNull()
                 .isNotEqualTo(0);
+        assertThat(randomFilledInstance.getSomeByte())
+                .isNotNull()
+                .isNotEqualTo(Byte.valueOf("0"));
+        assertThat(randomFilledInstance.getSomeChar())
+                .isNotNull()
+                .isNotEqualTo("");
 
     }
 

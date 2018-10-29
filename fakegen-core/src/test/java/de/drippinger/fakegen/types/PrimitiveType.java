@@ -20,4 +20,8 @@ public class PrimitiveType {
 
     private boolean someBoolean;
 
+    private byte someByte;
+
+    private char someChar;
+
 }

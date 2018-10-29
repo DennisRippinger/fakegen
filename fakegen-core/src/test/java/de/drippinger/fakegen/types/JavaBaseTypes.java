@@ -3,13 +3,8 @@ package de.drippinger.fakegen.types;
 import lombok.Data;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.*;
+import java.util.*;
 
 /**
  * @author Dennis Rippinger
@@ -32,5 +27,13 @@ public class JavaBaseTypes {
     private Map someMap;
 
     private BigInteger someBigInteger;
+
+    private Instant someInstant;
+
+    private Period somePeriod;
+
+    private ZonedDateTime someZonedDateTime;
+
+    private Calendar someCalendar;
 
 }

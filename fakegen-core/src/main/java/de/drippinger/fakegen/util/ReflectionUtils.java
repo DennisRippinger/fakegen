@@ -105,6 +105,10 @@ public final class ReflectionUtils {
             result.put(short.class, method);
         } else if (returnType.equals(Long.class)) {
             result.put(long.class, method);
+        } else if (returnType.equals(Byte.class)) {
+            result.put(byte.class, method);
+        } else if (returnType.equals(Character.class)) {
+            result.put(char.class, method);
         }
     }
 

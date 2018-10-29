@@ -3,7 +3,7 @@ package de.drippinger.fakegen.util;
 import lombok.experimental.UtilityClass;
 
 /**
- * @author Dennis Rippinger (msg systems ag) 2018
+ * @author Dennis Rippinger 
  */
 @UtilityClass
 public final class StringUtils {

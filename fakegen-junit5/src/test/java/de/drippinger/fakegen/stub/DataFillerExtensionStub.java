@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author Dennis Rippinger
  */
 @ExtendWith(TestDataFillerExtension.class)
-public class DataFillerRuleStub {
+public class DataFillerExtensionStub {
 
     private TestDataFiller testDataFiller = new TestDataFiller();
 

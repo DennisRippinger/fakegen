@@ -22,6 +22,8 @@ public class TestDataFillerExtension implements TestExecutionExceptionHandler {
                 .getTestClass()
                 .map(fieldWithTestDataFiller())
                 .ifPresent(field -> extractInstanceAndLogSeed(field, extensionContext));
+
+        throw throwable;
     }
 
     private void extractInstanceAndLogSeed(Field field, ExtensionContext extensionContext) {

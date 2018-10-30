@@ -45,6 +45,8 @@ import static java.util.Collections.singleton;
  * which provides all values. In a case were the created data identify a constellation which
  * failed the test, it is possible to replay them with the seed. See the JUnit 4 and 5 Rule
  * and Extension for more details.
+ *
+ * @author Dennis Rippinger
  */
 @SuppressWarnings("unchecked")
 public class TestDataFiller {

@@ -8,6 +8,10 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 /**
+ * This JUnit5 Extension tracks the usage of a {@link de.drippinger.fakegen.TestDataFiller} instance in the test.
+ * If the test fails for some reason, it will print a message with the random seed used to generate all random
+ * values into STOUT. This allows to replay a failed test with the same values.
+ *
  * @author Dennis Rippinger
  */
 public class TestDataFillerExtension implements TestExecutionExceptionHandler {

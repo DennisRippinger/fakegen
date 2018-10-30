@@ -30,6 +30,8 @@ public class UninstanciableTest {
         assertThat(randomFilledInstance.getName()).hasSize(10);
         assertThat(randomFilledInstance.isValid()).isNotNull();
         assertThat(randomFilledInstance.getTime()).isEqualToIgnoringSeconds(now());
+        assertThat(randomFilledInstance.isSomehowValid()).isEqualTo(randomFilledInstance.isValid());
+        assertThat(InterfaceType.isValid("test")).isTrue();
     }
 
     @Test

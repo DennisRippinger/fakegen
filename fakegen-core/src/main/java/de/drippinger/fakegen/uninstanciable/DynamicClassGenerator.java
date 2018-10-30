@@ -13,8 +13,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static de.drippinger.fakegen.util.ReflectionUtils.getAllMethods;
-import static de.drippinger.fakegen.util.ReflectionUtils.isAbstractClass;
+import static de.drippinger.fakegen.util.ReflectionUtils.*;
 import static de.drippinger.fakegen.util.StringUtils.firstLowerCase;
 import static de.drippinger.fakegen.util.StringUtils.titleCase;
 
@@ -76,8 +75,8 @@ public class DynamicClassGenerator {
     }
 
     private <T> Builder<T> addBooleanMethodImpl(Builder<T> builder, Method method, Class<?> type) {
-        if (method.getName().startsWith("is") && method.getName().length() > 2) {
-            String name = firstLowerCase(method.getName().substring(2, method.getName().length()));
+        if (relevantForFieldCreation("is", method)) {
+            String name = firstLowerCase(method.getName().substring(2));
 
             boolean containsField = false;
             if (isAbstractClass(type)) {
@@ -98,14 +97,21 @@ public class DynamicClassGenerator {
     }
 
     private <T> Builder<T> addGetMethodImpl(Builder<T> builder, Method method) {
-        if (method.getName().startsWith("get") && method.getName().length() > 3) {
-            String name = firstLowerCase(method.getName().substring(3, method.getName().length()));
+        if (relevantForFieldCreation("get", method)) {
+            String name = firstLowerCase(method.getName().substring(3));
 
             builder = builder.defineField(name, method.getReturnType(), Visibility.PRIVATE)
                     .defineMethod("get" + titleCase(name), method.getReturnType(), Visibility.PUBLIC)
                     .intercept(FieldAccessor.ofField(name));
         }
         return builder;
+    }
+
+    private boolean relevantForFieldCreation(String prefix, Method method) {
+        return isNotStaticMethod(method) &&
+                !method.isDefault() &&
+                method.getName().startsWith(prefix) &&
+                method.getName().length() > prefix.length();
     }
 
 

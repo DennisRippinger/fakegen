@@ -35,15 +35,15 @@ public final class ReflectionUtils {
         return fields;
     }
 
-    public static List<Method> getAllMethods(Class<?> type) {
-        List<Method> methods = new ArrayList<>();
-        return getAllMethods(methods, type);
+    public static Iterable<Method> getAllMethods(Class<?> type) {
+        Map<String, Method> methods = new HashMap<>();
+        return getAllMethods(methods, type).values();
     }
 
-    public static List<Method> getAllMethods(List<Method> methods, Class<?> type) {
+    private static Map<String, Method> getAllMethods(Map<String, Method> methods, Class<?> type) {
         for (Method method : type.getDeclaredMethods()) {
-            if (!method.isDefault() && isNotBaseObjectMethod(method)) {
-                methods.add(method);
+            if (!method.isDefault() && isNotStaticMethod(method) && isNotBaseObjectMethod(method)) {
+                methods.put(method.getName(), method);
             }
         }
 
@@ -150,6 +150,10 @@ public final class ReflectionUtils {
 
     public static boolean isStaticMethod(Method method) {
         return Modifier.isStatic(method.getModifiers());
+    }
+
+    public static boolean isNotStaticMethod(Method method) {
+        return !Modifier.isStatic(method.getModifiers());
     }
 
 }

@@ -4,7 +4,7 @@
 
     <groupId>de.drippinger.fakegen</groupId>
     <artifactId>fakegen-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
 
     <packaging>pom</packaging>
 
@@ -40,7 +40,7 @@
     <scm>
         <connection>scm:git:git@github.com:DennisRippinger/fakegen.git</connection>
         <developerConnection>scm:git:git@github.com:DennisRippinger/fakegen.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>fakegen-0.2</tag>
         <url>https://github.com/DennisRippinger/fakegen</url>
     </scm>
 

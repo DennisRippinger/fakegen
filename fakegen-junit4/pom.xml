@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.drippinger.fakegen</groupId>
         <artifactId>fakegen-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.2</version>
     </parent>
 
     <artifactId>fakegen-junit4</artifactId>

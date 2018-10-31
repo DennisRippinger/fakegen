@@ -25,6 +25,18 @@ Due to the random nature of Fakegen it could identify a problematic set of data,
 In such cases it offers possibilities to make the test reproducible. 
 See [Testing Support](#testing-support) for more input.
 
+## Dependency
+
+````xml
+<dependency>
+    <groupId>de.drippinger.fakegen</groupId>
+    <artifactId>fakegen-core</artifactId>
+    <version>0.2</version> 
+</dependency>
+````
+
+See also [Testing Support](#testing-support) for specific JUnit 4 and 5 support.
+
 ## Usage
 
 A simple use case could look similar to the following:
@@ -181,6 +193,14 @@ public void failing_test_should_print_seed() {
 // Seed used in Test 'com.company.logic.MyTest' was -874208787563157915
 ````
 
+````xml
+<dependency>
+    <groupId>de.drippinger.fakegen</groupId>
+    <artifactId>fakegen-junit4</artifactId>
+    <version>0.2</version> 
+</dependency>
+````
+
 ### JUnit 5
 For JUnit 5 Fakegen provides an Extension:
 
@@ -202,6 +222,13 @@ public class MyTest {
 
 The Extension implements a ExceptionListener and will try to find a field with the regular `TestDataFiller`.
 
+````xml
+<dependency>
+    <groupId>de.drippinger.fakegen</groupId>
+    <artifactId>fakegen-junit5</artifactId>
+    <version>0.2</version> 
+</dependency>
+````
 
 ## Performance
 
@@ -215,7 +242,7 @@ The detailed results can be inspected [here](http://jmh.morethan.io/?gist=896e11
 The tests itself are within the fakegen-benchmark folder.
 
 But what does that mean?
-To put the results into perspective a test case with [Mockito](https://github.com/mockito/mockito) was added which does roughly the same as the other tests.  
+To put the results into perspective a test case with [Mockito](https://github.com/mockito/mockito) was added which does roughly the same as the other tests.
 Of course this is an unfair comparison, since it is not Mockitos intended usage.
 But many of us use Mockito on a daily basis, and there it is not an issue.
 

@@ -2,8 +2,13 @@ package de.drippinger.fakegen.autovalue;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * Simple Animal Class.
+ *
+ * @author Dennis Rippinger
+ */
 @AutoValue
-abstract class Animal {
+public abstract class Animal {
     abstract String name();
 
     abstract int numberOfLegs();

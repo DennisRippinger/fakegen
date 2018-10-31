@@ -157,6 +157,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>fakegen-@{project.version}</tagNameFormat>
                     <localCheckout>true</localCheckout>
                     <pushChanges>false</pushChanges>

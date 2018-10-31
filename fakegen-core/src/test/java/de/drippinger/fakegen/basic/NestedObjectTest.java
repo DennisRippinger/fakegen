@@ -17,7 +17,7 @@ public class NestedObjectTest {
     @Test
     @DisplayName("Should fill a complex nested Type")
     void createRandomFilledInstance_fill_nested() {
-        NestedType randomFilledInstance = filler.createRandomFilledInstance(NestedType.class);
+        NestedType randomFilledInstance = filler.fillInstance(NestedType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getName()).hasSize(10);

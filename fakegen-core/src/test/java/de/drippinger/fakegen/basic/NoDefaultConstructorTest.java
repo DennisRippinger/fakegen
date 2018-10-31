@@ -16,7 +16,7 @@ public class NoDefaultConstructorTest {
     @Test
     void should_not_create_class_with_no_empty_constructor() {
         NoDefaultConstructorType randomFilledInstance = filler
-                .createRandomFilledInstance(NoDefaultConstructorType.class);
+                .fillInstance(NoDefaultConstructorType.class);
 
         assertThat(randomFilledInstance).isNull();
 

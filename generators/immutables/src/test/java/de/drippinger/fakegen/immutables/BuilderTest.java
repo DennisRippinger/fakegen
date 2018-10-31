@@ -15,7 +15,7 @@ class BuilderTest {
     @Test
     void build_should_use_build() {
 
-        BuilderType fromBuilder = filler.createFromBuilder(ImmutableBuilderType.Builder.class)
+        BuilderType fromBuilder = filler.fillBuilder(ImmutableBuilderType.Builder.class)
                 .type(SimpleEnum.SOME)
                 .build();
 

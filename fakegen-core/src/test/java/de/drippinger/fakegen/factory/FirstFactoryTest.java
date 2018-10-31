@@ -18,7 +18,7 @@ class FirstFactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         BeanByFactoryType randomFilledByFactory = tdf
-                .createRandomFilledByFactory(BeanByFactoryType.class);
+                .fillByFactory(BeanByFactoryType.class);
 
         assertThat(randomFilledByFactory.getSomeField())
                 .isNotEmpty()
@@ -30,7 +30,7 @@ class FirstFactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         BeanByFactoryZeroArgsType randomFilledByFactory = tdf
-                .createRandomFilledByFactory(BeanByFactoryZeroArgsType.class);
+                .fillByFactory(BeanByFactoryZeroArgsType.class);
 
         assertThat(randomFilledByFactory.getSomeField())
                 .isEqualTo("Hello there General Kenobi");
@@ -41,7 +41,7 @@ class FirstFactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         BeanByFactoryWithCopyType randomFilledByFactory = tdf
-                .createRandomFilledByFactory(BeanByFactoryWithCopyType.class);
+                .fillByFactory(BeanByFactoryWithCopyType.class);
 
         assertThat(randomFilledByFactory.getSomeField())
                 .isNotEmpty()

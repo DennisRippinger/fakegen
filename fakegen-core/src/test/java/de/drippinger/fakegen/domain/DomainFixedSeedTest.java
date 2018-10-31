@@ -21,7 +21,7 @@ class DomainFixedSeedTest {
     void should_Use_Domain_Specific_Values() {
         TestDataFiller tdf = new TestDataFiller(TestConfiguration.class, 123L);
 
-        SimpleType randomFilledInstance = tdf.createRandomFilledInstance(SimpleType.class);
+        SimpleType randomFilledInstance = tdf.fillInstance(SimpleType.class);
 
         assertThat(randomFilledInstance.getName()).isEqualTo("Jayne");
     }

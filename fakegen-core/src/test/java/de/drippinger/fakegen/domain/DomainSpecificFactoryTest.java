@@ -19,7 +19,7 @@ class DomainSpecificFactoryTest {
     void should_Use_Domain_Specific_factory() {
         TestDataFiller tdf = new TestDataFiller(TestConfiguration.class);
 
-        NestedType randomFilledInstance = tdf.createRandomFilledInstance(NestedType.class);
+        NestedType randomFilledInstance = tdf.fillInstance(NestedType.class);
 
         assertThat(randomFilledInstance.getSimpleType().getName()).isEqualTo("Hello from factory");
     }

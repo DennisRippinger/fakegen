@@ -15,7 +15,7 @@ class SimpleTypeTest {
     @Test
     void should_use_lombok_builder() {
 
-        SimpleType fromBuilder = filler.createFromBuilder(SimpleType.builder())
+        SimpleType fromBuilder = filler.fillBuilder(SimpleType.builder())
                 .simpleEnum(SimpleEnum.VALUE_2)
                 .build();
         

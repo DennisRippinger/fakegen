@@ -25,7 +25,7 @@ class JvmTypesTest {
     void forClass(Class clazz) {
         TestDataFiller tdf = new TestDataFiller();
 
-        Throwable throwable = Assertions.catchThrowable(() -> tdf.createRandomFilledInstance(clazz));
+        Throwable throwable = Assertions.catchThrowable(() -> tdf.fillInstance(clazz));
 
         assertThat(throwable).isNull();
     }

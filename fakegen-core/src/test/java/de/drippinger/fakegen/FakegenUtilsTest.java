@@ -38,7 +38,7 @@ class FakegenUtilsTest {
     void modifyCollection_one() {
         TestDataFiller tdf = new TestDataFiller();
 
-        List<SimpleType> simpleTypes = tdf.createRandomFilledInstance(SimpleType.class, 1);
+        List<SimpleType> simpleTypes = tdf.fillInstances(SimpleType.class, 1);
 
         FakegenUtils.modifyCollection(simpleTypes, simpleType -> simpleType.setName("Set By Consumer"));
 
@@ -50,7 +50,7 @@ class FakegenUtilsTest {
     void modifyCollection_many() {
         TestDataFiller tdf = new TestDataFiller();
 
-        List<SimpleType> simpleTypes = tdf.createRandomFilledInstance(SimpleType.class, 3);
+        List<SimpleType> simpleTypes = tdf.fillInstances(SimpleType.class, 3);
 
         FakegenUtils.modifyCollection(simpleTypes, simpleType -> simpleType.setName("Set By Consumer"));
 
@@ -62,7 +62,7 @@ class FakegenUtilsTest {
     void modifyCollection_different() {
         TestDataFiller tdf = new TestDataFiller();
 
-        List<SimpleType> simpleTypes = tdf.createRandomFilledInstance(SimpleType.class, 3);
+        List<SimpleType> simpleTypes = tdf.fillInstances(SimpleType.class, 3);
 
         FakegenUtils.modifyCollection(simpleTypes,
                 simpleType -> simpleType.setName("Set By Consumer 1"),
@@ -79,7 +79,7 @@ class FakegenUtilsTest {
     void modifyCollection_circle() {
         TestDataFiller tdf = new TestDataFiller();
 
-        List<SimpleType> simpleTypes = tdf.createRandomFilledInstance(SimpleType.class, 3);
+        List<SimpleType> simpleTypes = tdf.fillInstances(SimpleType.class, 3);
 
         FakegenUtils.modifyCollection(simpleTypes,
                 simpleType -> simpleType.setName("Set By Consumer 1"),

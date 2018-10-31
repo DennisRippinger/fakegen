@@ -19,7 +19,7 @@ class ListReturnTest {
     void should_return_multiple_random_instances() {
         TestDataFiller tdf = new TestDataFiller();
 
-        List<SimpleType> result = tdf.createRandomFilledInstance(SimpleType.class, 3);
+        List<SimpleType> result = tdf.fillInstances(SimpleType.class, 3);
 
         assertThat(result)
                 .hasSize(3)
@@ -34,7 +34,7 @@ class ListReturnTest {
     void should_throw_exeeption_for_negative_amount() {
         TestDataFiller tdf = new TestDataFiller();
 
-        Throwable throwable = catchThrowable(() -> tdf.createRandomFilledInstance(SimpleType.class, -1));
+        Throwable throwable = catchThrowable(() -> tdf.fillInstances(SimpleType.class, -1));
 
         assertThat(throwable)
                 .isInstanceOf(FakegenException.class)

@@ -21,7 +21,7 @@ public class UninstanciableTest {
     @Test
     @DisplayName("Should fill an interface Type by creating a simple Impl of it")
     void createRandomFilledInstance_fill_interface() {
-        InterfaceType randomFilledInstance = filler.createRandomFilledInstance(InterfaceType.class);
+        InterfaceType randomFilledInstance = filler.fillInstance(InterfaceType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getClass().getSimpleName()).isEqualTo("InterfaceType$SyntheticImpl");
@@ -37,7 +37,7 @@ public class UninstanciableTest {
     @Test
     @DisplayName("Should fill an abstract Type by creating a simple Impl of it")
     void createRandomFilledInstance_fill_abstract() {
-        AbstractType randomFilledInstance = filler.createRandomFilledInstance(AbstractType.class);
+        AbstractType randomFilledInstance = filler.fillInstance(AbstractType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getClass().getSimpleName()).isEqualTo("AbstractType$SyntheticImpl");
@@ -50,7 +50,7 @@ public class UninstanciableTest {
     @Test
     @DisplayName("Should fill an interface nested Type by creating a simple Impl of it.")
     void createRandomFilledInstance_fill_interface_nested() {
-        NestedInterfaceType randomFilledInstance = filler.createRandomFilledInstance(NestedInterfaceType.class);
+        NestedInterfaceType randomFilledInstance = filler.fillInstance(NestedInterfaceType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getClass().getSimpleName()).isEqualTo("NestedInterfaceType$SyntheticImpl");
@@ -67,7 +67,7 @@ public class UninstanciableTest {
     @DisplayName("Should provide a regular toString implementation")
     void createRandomFilledInstance_fill_interface_toString() {
 
-        InterfaceType randomFilledInstance = filler.createRandomFilledInstance(InterfaceType.class);
+        InterfaceType randomFilledInstance = filler.fillInstance(InterfaceType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.toString()).matches("de\\.drippinger\\.fakegen\\.types\\.InterfaceType" +
@@ -78,7 +78,7 @@ public class UninstanciableTest {
     @Test
     @DisplayName("Should return null on jvm internal")
     void should_return_null_on_internal() {
-        RepaintArea randomFilledInstance = filler.createRandomFilledInstance(RepaintArea.class);
+        RepaintArea randomFilledInstance = filler.fillInstance(RepaintArea.class);
 
         assertThat(randomFilledInstance).isNull();
     }

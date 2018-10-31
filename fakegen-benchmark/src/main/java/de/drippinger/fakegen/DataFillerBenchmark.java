@@ -28,7 +28,7 @@ public class DataFillerBenchmark {
     public void fill_java_base_types_with_tdf(Blackhole blackhole) {
         TestDataFiller tdf = new TestDataFiller();
 
-        JavaBaseTypes randomFilledInstance = tdf.createRandomFilledInstance(JavaBaseTypes.class);
+        JavaBaseTypes randomFilledInstance = tdf.fillInstance(JavaBaseTypes.class);
 
         randomFilledInstance.hasNoNullValues();
 

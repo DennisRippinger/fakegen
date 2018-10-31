@@ -32,7 +32,7 @@ A simple use case could look similar to the following:
 ```java
 TestDataFiller tdf = new TestDataFiller();
 SomeEntity entity = tdf
-    .createRandomFilledInstance(SomeEntity.class, instance -> instance.setGreeting("Hello World"));
+    .fillInstance(SomeEntity.class, instance -> instance.setGreeting("Hello World"));
 
 System.out.println(entity);
 // SomeEntity(greetings=Hello world, birthday=2018-10-14)
@@ -114,7 +114,7 @@ public static BeanByFactoryType createBeanWith(String someField) {
 
 // Fakegen
 BeanByFactoryType randomFilledByFactory = tdf
-        .createRandomFilledByFactory(BeanByFactoryType.class);
+        .fillByFactory(BeanByFactoryType.class);
 ```
 Fakegen will look for a static method returning the requested type within the class. 
 The parameters will be filled by the regular Fakegen logic.
@@ -125,7 +125,7 @@ When a distinct method is required it is possible to identify the method directl
 
 ````java
 BeanByFactoryType randomFilledByFactory = tdf
-        .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
+        .fillByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
 ````
 
 The identification of a method via a string can be problematic when it comes to refactoring or typos. 
@@ -137,7 +137,7 @@ Fakegen also supports the mayor builder pattern currently present.
 If you are using [Lombok](https://projectlombok.org/features/Builder), [Immutables](https://immutables.github.io/), [Freebuilder](https://github.com/inferred/FreeBuilder) or [AutoValue](https://github.com/google/auto/tree/master/value), Fakegen can pick up the Builder class, fill them, and allows to return an (immutable) instance.
 
 ```java
-BuilderType fromBuilder = filler.createFromBuilder(ImmutableBuilderType.Builder.class)
+BuilderType fromBuilder = filler.fillBuilder(ImmutableBuilderType.Builder.class)
                 .type(SimpleEnum.SOME)
                 .build();
 ```

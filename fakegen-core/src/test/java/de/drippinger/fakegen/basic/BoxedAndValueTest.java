@@ -18,7 +18,7 @@ class BoxedAndValueTest {
     @Test
     @DisplayName("Should fill an object with boxed types")
     void createRandomFilledInstance_fill_Boxed_type() {
-        BoxedType randomFilledInstance = filler.createRandomFilledInstance(BoxedType.class);
+        BoxedType randomFilledInstance = filler.fillInstance(BoxedType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getSomeBoolean()).isNotNull();
@@ -49,7 +49,7 @@ class BoxedAndValueTest {
     @Test
     @DisplayName("Should fill an object with primitive types")
     void createRandomFilledInstance_fill_primitive_type() {
-        PrimitiveType randomFilledInstance = filler.createRandomFilledInstance(PrimitiveType.class);
+        PrimitiveType randomFilledInstance = filler.fillInstance(PrimitiveType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getSomeDouble())

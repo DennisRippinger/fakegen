@@ -133,11 +133,11 @@ public class TestDataFiller {
      * Creates an object of the required type. It will be recursively filled till it is composed
      * out of basic java types or it visits the same type more than once.
      *
-     * @param clazz the desired class, non null.
      * @param <T>   The type of the class.
+     * @param clazz the desired class, non null.
      * @return a new filled object with random data.
      */
-    public <T> T createRandomFilledInstance(Class<T> clazz) {
+    public <T> T fillInstance(Class<T> clazz) {
         return createRandomFilledInstanceInternal(clazz, 0);
     }
 
@@ -145,12 +145,12 @@ public class TestDataFiller {
      * Creates an object of the required type. It will be recursively filled till it is composed
      * out of basic java types or it visits the same type more than once.
      *
+     * @param <T>      The type of the class.
      * @param clazz    the desired class, non null.
      * @param consumer lambda consumer which will be applied on the created instance.
-     * @param <T>      The type of the class.
      * @return a new filled object with random data.
      */
-    public <T> T createRandomFilledInstance(Class<T> clazz, Consumer<T> consumer) {
+    public <T> T fillInstance(Class<T> clazz, Consumer<T> consumer) {
         T randomFilledInstance = createRandomFilledInstanceInternal(clazz, 0);
         consumer.accept(randomFilledInstance);
 
@@ -161,19 +161,19 @@ public class TestDataFiller {
      * Creates a list of the required type. It will be recursively filled till it is composed
      * out of basic java types or it visits the same type more than once.
      *
+     * @param <T>    The type of the class.
      * @param clazz  the desired class, non null.
      * @param amount the required number of random instances, greater 0.
-     * @param <T>    The type of the class.
      * @return a new filled object with random data.
      */
-    public <T> List<T> createRandomFilledInstance(Class<T> clazz, int amount) {
+    public <T> List<T> fillInstances(Class<T> clazz, int amount) {
         if (amount < 0) {
             throw new FakegenException("Can not handle negative amount");
         }
 
         List<T> result = new ArrayList(amount + 1);
         for (int i = 0; i < amount; i++) {
-            result.add(createRandomFilledInstance(clazz));
+            result.add(fillInstance(clazz));
         }
 
         return result;
@@ -192,20 +192,20 @@ public class TestDataFiller {
      *      .build();
      * }</pre>
      * <p>
-     * For Lombok better use {@link #createFromBuilder(Object)}.
+     * For Lombok better use {@link #fillBuilder(Object)}.
      *
-     * @param clazz the desired builder class, non null.
      * @param <T>   The type of the class.
+     * @param clazz the desired builder class, non null.
      * @return a new filled builder with random data.
      */
-    public <T> T createFromBuilder(Class<T> clazz) {
+    public <T> T fillBuilder(Class<T> clazz) {
         return createRandomFilledInstanceInternal(clazz, 0, true, singleton("initBits"), true);
     }
 
     /**
      * Creates an object of the required builder type. It will be recursively filled till it is composed
      * out of basic java types or it visits the same type more than once. Unlike
-     * {@link #createFromBuilder(Class)} this is intended for the usage with lombok.
+     * {@link #fillBuilder(Class)} this is intended for the usage with lombok.
      *
      * <pre>{@code
      * SimpleBuilderType fromBuilder = filler.createFromBuilder(SimpleBuilderType.builder())
@@ -213,13 +213,13 @@ public class TestDataFiller {
      *      .build();
      * }</pre>
      * <p>
-     * For Lombok better use {@link #createFromBuilder(Object)}.
+     * For Lombok better use {@link #fillBuilder(Object)}.
      *
-     * @param instance the builder instance, non null.
      * @param <T>      The type of the class.
+     * @param instance the builder instance, non null.
      * @return a new filled builder with random data.
      */
-    public <T> T createFromBuilder(T instance) {
+    public <T> T fillBuilder(T instance) {
         return (T) fill(instance, instance.getClass(), 0, emptySet(), false);
     }
 
@@ -232,13 +232,13 @@ public class TestDataFiller {
      * The parameters will be created by the random filler and applied to the method call.
      * <p>
      * This will use the first factory method it can find, which may depend on the used JVM. To define the
-     * exact method, use {@link #createRandomFilledByFactory(Class, MethodHolder)}.
+     * exact method, use {@link #fillByFactory(Class, MethodHolder)}.
      *
-     * @param clazz the desired class containing a factory method.
      * @param <T>   the desired type.
+     * @param clazz the desired class containing a factory method.
      * @return a new instance created by the first found factory method.
      */
-    public <T> T createRandomFilledByFactory(Class<T> clazz) {
+    public <T> T fillByFactory(Class<T> clazz) {
         try {
 
             Optional<Method> possibleFactoryMethod = Arrays.stream(clazz.getMethods())
@@ -251,7 +251,7 @@ public class TestDataFiller {
                 Method method = possibleFactoryMethod.get();
 
                 Object[] instances = Arrays.stream(method.getParameterTypes())
-                        .map(this::createRandomFilledInstance)
+                        .map(this::fillInstance)
                         .toArray();
 
                 return (T) method.invoke(null, instances);
@@ -279,17 +279,17 @@ public class TestDataFiller {
      * Use {@link MethodHolder#method(String, Class[])} for convenience. In case of missing method
      * an exception will try to identify a similar named method to identify missing refactoring or typos easier.
      *
+     * @param <T>          the desired type.
      * @param clazz        the desired class containing a factory method, non null.
      * @param methodHolder a wrapper to identify a method, non null.
-     * @param <T>          the desired type.
      * @return a new instance created by the desired factory method.
      */
-    public <T> T createRandomFilledByFactory(Class<T> clazz, MethodHolder methodHolder) {
+    public <T> T fillByFactory(Class<T> clazz, MethodHolder methodHolder) {
         try {
             Method method = methodHolder.createMethod(clazz);
 
             Object[] instances = Arrays.stream(methodHolder.getParameterTypes())
-                    .map(this::createRandomFilledInstance)
+                    .map(this::fillInstance)
                     .toArray();
 
             return (T) method.invoke(null, instances);

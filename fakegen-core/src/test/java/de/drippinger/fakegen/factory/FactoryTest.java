@@ -20,7 +20,7 @@ class FactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         BeanByFactoryType randomFilledByFactory = tdf
-                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
+                .fillByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
 
         assertThat(randomFilledByFactory.getSomeField())
                 .isNotEmpty()
@@ -33,7 +33,7 @@ class FactoryTest {
 
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWitf", String.class)));
+                .fillByFactory(BeanByFactoryType.class, method("createBeanWitf", String.class)));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)
@@ -46,7 +46,7 @@ class FactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith", Double.class)));
+                .fillByFactory(BeanByFactoryType.class, method("createBeanWith", Double.class)));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)
@@ -59,7 +59,7 @@ class FactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactoryType.class, method("somethingElse", SimpleType.class)));
+                .fillByFactory(BeanByFactoryType.class, method("somethingElse", SimpleType.class)));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)
@@ -71,7 +71,7 @@ class FactoryTest {
         TestDataFiller tdf = new TestDataFiller();
 
         Throwable fakegenException = catchThrowable(() -> tdf
-                .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith")));
+                .fillByFactory(BeanByFactoryType.class, method("createBeanWith")));
 
         assertThat(fakegenException)
                 .isInstanceOf(FakegenException.class)
@@ -84,7 +84,7 @@ class FactoryTest {
     void should_return_null_on_no_factory() {
         TestDataFiller tdf = new TestDataFiller();
 
-        SimpleType fromBuilder = tdf.createRandomFilledByFactory(SimpleType.class);
+        SimpleType fromBuilder = tdf.fillByFactory(SimpleType.class);
 
         assertThat(fromBuilder).isNull();
 
@@ -94,7 +94,7 @@ class FactoryTest {
     void should_throw_exception_if_no_factory_present() {
         TestDataFiller tdf = new TestDataFiller();
 
-        SimpleType fromBuilder = tdf.createRandomFilledByFactory(SimpleType.class);
+        SimpleType fromBuilder = tdf.fillByFactory(SimpleType.class);
 
         assertThat(fromBuilder).isNull();
 

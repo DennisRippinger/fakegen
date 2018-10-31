@@ -17,7 +17,7 @@ public class RecursiveTest {
     @Test
     @DisplayName("Should fill a recursive Type once")
     void createRandomFilledInstance_fill_nested() {
-        RecursiveType randomFilledInstance = filler.createRandomFilledInstance(RecursiveType.class);
+        RecursiveType randomFilledInstance = filler.fillInstance(RecursiveType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getName()).hasSize(10);

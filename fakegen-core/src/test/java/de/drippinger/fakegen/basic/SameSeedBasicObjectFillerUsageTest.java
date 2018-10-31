@@ -17,7 +17,7 @@ class SameSeedBasicObjectFillerUsageTest {
     @Test
     @DisplayName("Should fill a simple Object with the same value")
     void createRandomFilledInstance_simple_object() {
-        SimpleType randomFilledInstance = filler.createRandomFilledInstance(SimpleType.class);
+        SimpleType randomFilledInstance = filler.fillInstance(SimpleType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getName())

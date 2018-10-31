@@ -14,7 +14,7 @@ class BuilderTest {
 
     @Test
     void should_use_autovalue_builder() {
-        Animal animal = tdf.createFromBuilder(AutoValue_Animal.Builder.class)
+        Animal animal = tdf.fillBuilder(AutoValue_Animal.Builder.class)
                 .setNumberOfLegs(10)
                 .build();
 

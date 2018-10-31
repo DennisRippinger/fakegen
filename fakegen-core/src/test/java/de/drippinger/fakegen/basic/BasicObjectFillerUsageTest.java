@@ -26,7 +26,7 @@ class BasicObjectFillerUsageTest {
     @Test
     @DisplayName("Should fill a simple Object")
     void createRandomFilledInstance_simple_object() {
-        SimpleType randomFilledInstance = filler.createRandomFilledInstance(SimpleType.class);
+        SimpleType randomFilledInstance = filler.fillInstance(SimpleType.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getBirthday()).isToday();
@@ -37,7 +37,7 @@ class BasicObjectFillerUsageTest {
     @Test
     @DisplayName("Should fill a regular String")
     void createRandomFilledInstance_regular_string() {
-        String randomFilledInstance = filler.createRandomFilledInstance(String.class);
+        String randomFilledInstance = filler.fillInstance(String.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance).hasSize(10);
@@ -46,7 +46,7 @@ class BasicObjectFillerUsageTest {
     @Test
     @DisplayName("Should use a consumer")
     void createRandomFilledInstance_apply_consumer() {
-        SimpleType randomFilledInstance = filler.createRandomFilledInstance(
+        SimpleType randomFilledInstance = filler.fillInstance(
                 SimpleType.class,
                 simpleType -> simpleType.setName("Dennis")
         );
@@ -59,7 +59,7 @@ class BasicObjectFillerUsageTest {
     @Test
     @DisplayName("Should fill a class with regular java types")
     void createRandomFilledInstance_should_fill_reglar_java_types() {
-        JavaBaseTypes randomFilledInstance = filler.createRandomFilledInstance(JavaBaseTypes.class);
+        JavaBaseTypes randomFilledInstance = filler.fillInstance(JavaBaseTypes.class);
 
         assertThat(randomFilledInstance).isNotNull();
         assertThat(randomFilledInstance.getSomeBigInteger())
@@ -94,7 +94,7 @@ class BasicObjectFillerUsageTest {
         @Test
         @DisplayName("Should fill an Enum Type")
         void createRandomFilledInstance_enum_type() {
-            SimpleEnum randomFilledInstance = filler.createRandomFilledInstance(SimpleEnum.class);
+            SimpleEnum randomFilledInstance = filler.fillInstance(SimpleEnum.class);
 
             assertThat(randomFilledInstance).isNotNull();
             assertThat(randomFilledInstance).isInstanceOf(SimpleEnum.class);
@@ -104,7 +104,7 @@ class BasicObjectFillerUsageTest {
         @Test
         @DisplayName("Should return null on empty enum")
         void createRandomFilledInstance_empty_enum_type() {
-            EmptyEnum randomFilledInstance = filler.createRandomFilledInstance(EmptyEnum.class);
+            EmptyEnum randomFilledInstance = filler.fillInstance(EmptyEnum.class);
 
             assertThat(randomFilledInstance).isNull();
         }

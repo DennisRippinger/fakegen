@@ -23,7 +23,7 @@ class DomainBasicTest {
     void should_Use_Domain_Specific_Values() {
         TestDataFiller tdf = new TestDataFiller(TestConfiguration.class);
 
-        JavaBaseTypes randomFilledInstance = tdf.createRandomFilledInstance(JavaBaseTypes.class);
+        JavaBaseTypes randomFilledInstance = tdf.fillInstance(JavaBaseTypes.class);
 
         assertThat(randomFilledInstance.getSomeBigInteger()).isEqualTo(123);
         assertThat(randomFilledInstance.getSomeDate()).isEqualToIgnoringSeconds(DateUtils.addDays(new Date(), -1));

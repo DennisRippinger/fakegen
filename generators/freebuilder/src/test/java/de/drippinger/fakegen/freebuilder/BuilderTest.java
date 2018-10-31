@@ -15,7 +15,7 @@ class BuilderTest {
     @Test
     void should_use_freetype_builder() {
 
-        BuilderType fromBuilder = filler.createFromBuilder(BuilderType.Builder.class)
+        BuilderType fromBuilder = filler.fillBuilder(BuilderType.Builder.class)
                 .type(SimpleEnum.SOME)
                 .build();
 

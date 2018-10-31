@@ -201,3 +201,21 @@ public class MyTest {
 ````
 
 The Extension implements a ExceptionListener and will try to find a field with the regular `TestDataFiller`.
+
+
+## Performance
+
+Fakegen works with heavy usage of Java reflection.
+Which is usually considered an _expensive_ operation.
+And this is true.
+Compared to doing it manually, it is slow.
+
+![JMH Results](/img/jmh_results.png?raw=true "JMH Tests results")
+The detailed results can be inspected [here](http://jmh.morethan.io/?gist=896e1136c63a4e87ffcd1a866579fc3f).
+The tests itself are within the fakegen-benchmark folder.
+
+But what does that mean?
+To put the results into perspective a test case with [Mockito](https://github.com/mockito/mockito) was added which does roughly the same as the other tests.  
+Of course this is an unfair comparison, since it is not Mockitos intended usage.
+But many of us use Mockito on a daily basis, and there it is not an issue.
+

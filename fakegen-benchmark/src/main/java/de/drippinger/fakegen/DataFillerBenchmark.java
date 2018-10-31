@@ -1,10 +1,9 @@
 package de.drippinger.fakegen;
 
-import de.drippinger.fakegen.types.JavaBaseInterfaceTypes;
 import de.drippinger.fakegen.types.JavaBaseTypes;
+import org.mockito.Mockito;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.math.BigInteger;
@@ -13,15 +12,22 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-@State(value = Scope.Benchmark)
+import static org.mockito.Mockito.when;
+
+@Fork(2)
 public class DataFillerBenchmark {
 
-    private TestDataFiller tdf = new TestDataFiller();
+    @Benchmark
+    public void testdatafiller_baseline(Blackhole blackhole) {
+        TestDataFiller tdf = new TestDataFiller();
 
-    private Random random = new Random();
+        blackhole.consume(tdf);
+    }
 
     @Benchmark
     public void fill_java_base_types_with_tdf(Blackhole blackhole) {
+        TestDataFiller tdf = new TestDataFiller();
+
         JavaBaseTypes randomFilledInstance = tdf.createRandomFilledInstance(JavaBaseTypes.class);
 
         randomFilledInstance.hasNoNullValues();
@@ -30,16 +36,28 @@ public class DataFillerBenchmark {
     }
 
     @Benchmark
-    public void fill_java_base_interface_types_with_tdf(Blackhole blackhole) {
-        JavaBaseInterfaceTypes randomFilledInstance = tdf.createRandomFilledInstance(JavaBaseInterfaceTypes.class);
+    public void fill_mockito_mockito(Blackhole blackhole) {
+        Random random = new Random();
 
-        randomFilledInstance.hasNoNullValues();
+        JavaBaseTypes mock = Mockito.mock(JavaBaseTypes.class);
 
-        blackhole.consume(randomFilledInstance);
+        when(mock.getSomeBigInteger()).thenReturn(BigInteger.valueOf(random.nextLong()));
+        when(mock.getSomeBigInteger()).thenReturn(BigInteger.valueOf(random.nextLong()));
+        when(mock.getSomeDate()).thenReturn(new Date());
+        when(mock.getSomeList()).thenReturn(new ArrayList());
+        when(mock.getSomeLocalDate()).thenReturn(LocalDate.now());
+        when(mock.getSomeLocalDateTime()).thenReturn(LocalDateTime.now());
+        when(mock.getSomeLocalTime()).thenReturn(LocalTime.now());
+        when(mock.getSomeMap()).thenReturn(new HashMap());
+        when(mock.getSomeSet()).thenReturn(new HashSet());
+
+        blackhole.consume(mock);
     }
 
     @Benchmark
     public void fill_java_base_types_regular(Blackhole blackhole) {
+        Random random = new Random();
+
         JavaBaseTypes baseTypes = new JavaBaseTypes();
 
         baseTypes.setSomeBigInteger(BigInteger.valueOf(random.nextLong()));

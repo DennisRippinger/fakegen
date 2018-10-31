@@ -157,6 +157,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <tagNameFormat>fakegen-@{project.version}</tagNameFormat>
                     <localCheckout>true</localCheckout>
                     <pushChanges>false</pushChanges>
                     <mavenExecutorId>forked-path</mavenExecutorId>

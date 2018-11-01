@@ -4,26 +4,26 @@
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/de/drippinger/fakegen/fakegen-core/maven-metadata.xml.svg)](https://search.maven.org/search?q=g:de.drippinger.fakegen%20AND%20a:fakegen-core)
 
 
-Fakegen is a library to create testdata on demand. 
-Unlike other libraries it can fill an entire object graph of your model class with random data. 
+Fakegen is a library to create test data on demand. 
+Unlike other libraries, it can fill an entire object graph of your model class with random data. 
 So you can focus on the relevant test data.
 
 ## Motivation
 
 In projects with a complex business logic tests often require that our parameter objects, like entities or DTOs, are filled with non-null data. 
-But for the test itself only a fraction of the parameters are relevant. 
-They may change from test to test, but an often seen pattern is that test initialisation is copied over and over, altering only the relevant data, or hidden into class-wise util methods. 
-After a while it is difficult to identify the relevant from the non relevant test data. 
-Fakegen is a test library that allows to automatically fill our objects with random test data, so that we can focus on the relevant data.
+However, for the test itself only a fraction of the parameters is relevant. 
+They may change from test to test, but an often seen pattern is that test initialization is copied over and over, altering only the relevant data, or hidden into class-wise until methods. 
+After a while, it is difficult to identify the relevant from the non-relevant test data. 
+Fakegen is a test library that allows to automatically filling our objects with random test data, so that we can focus on the relevant data.
 
 ### Relation to property based testing
 Filling the test data with a random set of data is a topic related to property based testing, see for instance [QuickTheories](https://github.com/ncredinburgh/QuickTheories) or [jqwik](https://jqwik.net/). 
-Property based testing algorithms tries to identify a set of properties which fail the test, e.g. trying the usual problematic cases like for Integer: min/max/zero. 
+Property based testing algorithms tries to identify a set of properties, which fail the test, e.g. trying the usual problematic cases like for Integer: min/max/zero. 
 Fakegen does not tries to identify such value pairs actively.
 Its main purpose is to simplify the given part of the test generation.
 The filled values should satisfy a minimal requirement such that the developer can focus on the variable parts for the test.
 Due to the random nature of Fakegen it could identify a problematic set of data, just like property based testing. 
-In such cases it offers possibilities to make the test reproducible. 
+In such cases, it offers possibilities to make the test reproducible. 
 See [Testing Support](#testing-support) for more input.
 
 ## Dependency
@@ -53,10 +53,11 @@ System.out.println(entity);
 
 ### Domain Specific Knowledge
 
-In many cases pure random fields would do the job, but while debugging one would have to deal with fields that do not resemble the domain specific knowledge. 
+In many cases pure random fields would do the job. 
+But while debugging one would have to deal with fields that do not resemble the domain specific knowledge. 
 A `surname` is not something like `3_fGu8C`.
-But this knowledge is highly domain specific.
-Therefore it is possible to create a `DomainConfiguration` class.
+However, this knowledge is highly domain specific.
+Therefore, it is possible to create a `DomainConfiguration` class.
 One can build them specific for a test, but it makes more sense to create a project specific class for the domain.
 
 ```java
@@ -130,7 +131,7 @@ BeanByFactoryType randomFilledByFactory = tdf
         .fillByFactory(BeanByFactoryType.class);
 ```
 Fakegen will look for a static method returning the requested type within the class. 
-The parameters will be filled by the regular Fakegen logic.
+The parameters objects will be created by the regular Fakegen logic.
 It also identifies copy constructors and omits them.
 In cases were multiple Factory methods are present it will use the first one found.
 Keep in mind that this is not reliably the same first method on all JVMs.
@@ -242,8 +243,8 @@ Compared to doing it manually, it is slow.
 The detailed results can be inspected [here](http://jmh.morethan.io/?gist=896e1136c63a4e87ffcd1a866579fc3f).
 The tests itself are within the fakegen-benchmark folder.
 
-But what does that mean?
+However, what does that mean?
 To put the results into perspective a test case with [Mockito](https://github.com/mockito/mockito) was added which does roughly the same as the other tests.
-Of course this is an unfair comparison, since it is not Mockitos intended usage.
+Of course, this is an unfair comparison, since it is not Mockitos intended usage.
 But many of us use Mockito on a daily basis, and there it is not an issue.
 

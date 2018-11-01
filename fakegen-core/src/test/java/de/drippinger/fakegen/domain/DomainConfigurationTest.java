@@ -14,7 +14,7 @@ class DomainConfigurationTest {
 
     @Test
     void should_add_and_get_for_string() {
-        DomainConfiguration domain = new SimpleDomainConfiguration(new Random());
+        DomainConfiguration domain = new SimpleDomainConfiguration(new Random(), null);
 
         domain.fieldForStringShouldUse("someField", () -> "someName");
 
@@ -27,7 +27,7 @@ class DomainConfigurationTest {
 
     @Test
     void should_add_and_get_for_a_object_type() {
-        DomainConfiguration domain = new SimpleDomainConfiguration(new Random());
+        DomainConfiguration domain = new SimpleDomainConfiguration(new Random(), null);
 
         domain.fieldForClassShouldUse("someField", Integer.class, () -> 1);
 
@@ -40,7 +40,7 @@ class DomainConfigurationTest {
 
     @Test
     void should_add_and_get_for_a_primitive_type() {
-        DomainConfiguration domain = new SimpleDomainConfiguration(new Random());
+        DomainConfiguration domain = new SimpleDomainConfiguration(new Random(), null);
 
         domain.fieldForClassShouldUse("someField", int.class, () -> 1);
 

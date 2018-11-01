@@ -37,8 +37,8 @@ class DomainBasicTest {
 
     public static class TestConfiguration extends DomainConfiguration {
 
-        public TestConfiguration(Random random) {
-            super(random);
+        public TestConfiguration(Random random, TestDataFiller testDataFiller) {
+            super(random, testDataFiller);
         }
 
         @Override

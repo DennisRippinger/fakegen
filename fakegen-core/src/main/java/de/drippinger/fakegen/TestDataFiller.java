@@ -66,7 +66,7 @@ public class TestDataFiller {
      */
     public TestDataFiller() {
         this.random = new Random();
-        this.domainConfiguration = new SimpleDomainConfiguration(this.random);
+        this.domainConfiguration = new SimpleDomainConfiguration(this.random, this);
         this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(domainConfiguration);
         this.seed = random.nextLong();
         random.setSeed(seed);
@@ -82,7 +82,7 @@ public class TestDataFiller {
     public TestDataFiller(Long seed) {
         this.random = new Random(seed);
         this.seed = seed;
-        this.domainConfiguration = new SimpleDomainConfiguration(random);
+        this.domainConfiguration = new SimpleDomainConfiguration(random, this);
         this.objectFillerFactoryMethods = getPotentialRandomFactoryMethods(domainConfiguration);
 
         domainConfiguration.init(random, this);
@@ -313,7 +313,7 @@ public class TestDataFiller {
 
         if (objectFillerFactoryMethods.containsKey(clazz)) {
             Method method = objectFillerFactoryMethods.get(clazz);
-            return (T) callFactoryMethod(null, method);
+            return (T) callFactoryMethod(null, method, null);
         } else if (isJvmRelevant(clazz)) {
             return null;
         } else if (clazz.isEnum()) {
@@ -395,15 +395,15 @@ public class TestDataFiller {
 
         Method method = objectFillerFactoryMethods.get(type);
         if (method != null) {
-            return callFactoryMethod(fieldName, method);
+            return callFactoryMethod(fieldName, method, field);
         }
 
         return null;
     }
 
     @SneakyThrows
-    private Object callFactoryMethod(String fieldName, Method method) {
-        return method.invoke(domainConfiguration, fieldName);
+    private Object callFactoryMethod(String fieldName, Method method, Field field) {
+        return method.invoke(domainConfiguration, fieldName, field);
     }
 
     @SneakyThrows
@@ -414,8 +414,8 @@ public class TestDataFiller {
     private Object newInstance(Class clazz, Random random) {
         try {
             return clazz
-                    .getDeclaredConstructor(Random.class)
-                    .newInstance(random);
+                    .getDeclaredConstructor(Random.class, TestDataFiller.class)
+                    .newInstance(random, this);
         } catch (ReflectiveOperationException e) {
             throw new FakegenException("Could not find Constructor with Random as parameter. " +
                     "If it is an inner class, is is static?", e);

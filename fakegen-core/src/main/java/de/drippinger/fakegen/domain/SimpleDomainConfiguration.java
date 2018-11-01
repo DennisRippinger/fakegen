@@ -9,8 +9,8 @@ import java.util.Random;
  */
 public class SimpleDomainConfiguration extends DomainConfiguration {
 
-    public SimpleDomainConfiguration(Random random) {
-        super(random);
+    public SimpleDomainConfiguration(Random random, TestDataFiller testDataFiller) {
+        super(random, testDataFiller);
     }
 
     @Override

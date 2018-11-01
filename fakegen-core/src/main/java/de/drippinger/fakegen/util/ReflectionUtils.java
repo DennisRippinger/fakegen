@@ -123,8 +123,9 @@ public final class ReflectionUtils {
     }
 
     private static boolean methodIsSuitableRandomFactory(Method method, Parameter[] parameters) {
-        return parameters.length == 1 &&
+        return parameters.length == 2 &&
                 parameters[0].getType().equals(String.class) &&
+                parameters[1].getType().equals(Field.class) &&
                 method.getReturnType() != null;
     }
 

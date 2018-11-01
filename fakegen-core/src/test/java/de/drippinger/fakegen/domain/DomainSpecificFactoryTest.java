@@ -5,6 +5,7 @@ import de.drippinger.fakegen.types.NestedType;
 import de.drippinger.fakegen.types.SimpleType;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,8 +27,8 @@ class DomainSpecificFactoryTest {
 
     public static class TestConfiguration extends DomainConfiguration {
 
-        public TestConfiguration(Random random) {
-            super(random);
+        public TestConfiguration(Random random, TestDataFiller testDataFiller) {
+            super(random, testDataFiller);
         }
 
         @Override
@@ -35,7 +36,7 @@ class DomainSpecificFactoryTest {
             // NOP
         }
 
-        public SimpleType createSimpleType(String fieldName) {
+        public SimpleType createSimpleType(String fieldName, Field field) {
             SimpleType simpleType = new SimpleType();
             simpleType.setName("Hello from factory");
 

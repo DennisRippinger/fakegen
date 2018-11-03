@@ -10,19 +10,21 @@ So you can focus on the relevant test data.
 
 ## Motivation
 
-In projects with a complex business logic tests often require that our parameter objects, like entities or DTOs, are filled with non-null data. 
-However, for the test itself only a fraction of the parameters is relevant. 
-They may change from test to test, but an often seen pattern is that test initialization is copied over and over, altering only the relevant data, or hidden into class-wise until methods. 
+In projects with complex business logic tests often require that our parameter objects, like entities or DTOs, are filled with non-null data. 
+However, for the test itself, only a fraction of the parameters are relevant. 
+They may change from test to test, but an often seen pattern is that test initialization is copied, altering only some data. 
+Or it is hidden in test-wise until methods. 
+Both result in noise within the test.
 After a while, it is difficult to identify the relevant from the non-relevant test data. 
-Fakegen is a test library that allows to automatically filling our objects with random test data, so that we can focus on the relevant data.
+Fakegen is a test library that allows to automatically fill the test objects with predefined or random data so that we can focus on the relevant data.
 
 ### Relation to property based testing
-Filling the test data with a random set of data is a topic related to property based testing, see for instance [QuickTheories](https://github.com/ncredinburgh/QuickTheories) or [jqwik](https://jqwik.net/). 
-Property based testing algorithms tries to identify a set of properties, which fail the test, e.g. trying the usual problematic cases like for Integer: min/max/zero. 
-Fakegen does not tries to identify such value pairs actively.
+Filling the test objects with random data is a topic related to property-based testing, see for instance [QuickTheories](https://github.com/ncredinburgh/QuickTheories) or [jqwik](https://jqwik.net/). 
+Property-based testing algorithms try to identify a set of properties, which fail the test, e.g. trying the usual problematic cases like for Integer: min/max/zero. 
+Fakegen does not try to identify such value sets actively.
 Its main purpose is to simplify the given part of the test generation.
-The filled values should satisfy a minimal requirement such that the developer can focus on the variable parts for the test.
-Due to the random nature of Fakegen it could identify a problematic set of data, just like property based testing. 
+The generated values should satisfy a minimal requirement, such that the developer can focus on the variable parts for the test.
+Due to the random nature of Fakegen, it could identify a problematic set of data, just like property-based testing. 
 In such cases, it offers possibilities to make the test reproducible. 
 See [Testing Support](#testing-support) for more input.
 
@@ -53,12 +55,12 @@ System.out.println(entity);
 
 ### Domain Specific Knowledge
 
-In many cases pure random fields would do the job. 
-But while debugging one would have to deal with fields that do not resemble the domain specific knowledge. 
-A `surname` is not something like `3_fGu8C`.
-However, this knowledge is highly domain specific.
-Therefore, it is possible to create a `DomainConfiguration` class.
-One can build them specific for a test, but it makes more sense to create a project specific class for the domain.
+Debugging a test with random strings and numbers can be difficult because they contain no human-comprehendible semantic.
+A `surname` is not something like `3_fGu8C` and mapping such values to a certain semantic a domain-specific task.
+
+Therefore Fakegen understands a `DomainConfiguration` class.
+They are intended to be built once for your project and referenced by the TestDataFiller instance.
+
 
 ```java
 public class TestConfiguration extends DomainConfiguration {
@@ -71,11 +73,15 @@ public class TestConfiguration extends DomainConfiguration {
     public void init(Random random, TestDataFiller testDataFiller) {
         Faker faker = new Faker(random);
 
-        this.fieldForStringShouldUse("name", () -> faker.name().firstName());
+        fieldForStringShouldUse("name", () -> faker.name().firstName());
+	fieldForClassShouldUse("birthday", LocalDate.class, () -> LocalDate.of(2000, 6, 1);
+
     }
 }
 ```
-Here done together with the [Faker library](https://github.com/DiUS/java-faker).
+`DomainConfiguration` provides methods to configure a Supplier for a specific field name and type combination.
+The Example works together with the [Faker library](https://github.com/DiUS/java-faker).
+Faker allows choosing from predefined values for different domains, such that the following is possible.
 
 ```java
 TestDataFiller tdf = new TestDataFiller(TestConfiguration.class);
@@ -84,8 +90,11 @@ SimpleType entity = tdf.createRandomFilledInstance(SimpleType.class);
 System.out.println(entity.getName());
 // Jane
 ```
+Usually, a Fakegen would recursively break down objects until they consist of the java-basic types. 
+Within a `DomainConfiguration` it is possible to define a default method for Type creation.
+This allows creating an instance in a more controlled way.
+Currently, it is required that the signature consists of a string.
 
-In case you have a very special object which needs to be instantiated in a way that does not work with Fakegen, you can create a method which returns the specific type and has a String as parameter.
 An Example:
 
 ````java
@@ -112,13 +121,12 @@ The method `createSimpleType` will now be used for all fields of the type, regar
 
 ## Features
 
-Beside the regular support for POJO classes, Fakegen supports some special cases:
+Besides the regular support for POJO classes, Fakegen supports some special cases:
 
 ### Factory Methods
 
-Within domain objects a sometimes observed style is the usage of factory methods.
-They are the only legit way to create an instance of the object.
-If there is only one factory method in the class it is possible to:
+Factory methods usually provide the only way to create an instance of the object.
+If there is only one factory method in the class it is possible to use the following.
 ```java
 
 // Factory Method in Class `BeanByFactoryType`
@@ -131,10 +139,10 @@ BeanByFactoryType randomFilledByFactory = tdf
         .fillByFactory(BeanByFactoryType.class);
 ```
 Fakegen will look for a static method returning the requested type within the class. 
-The parameters objects will be created by the regular Fakegen logic.
+The parameters objects will be created with the regular Fakegen logic.
 It also identifies copy constructors and omits them.
 In cases were multiple Factory methods are present it will use the first one found.
-Keep in mind that this is not reliably the same first method on all JVMs.
+This not reliably the same first method on all JVMs.
 When a distinct method is required it is possible to identify the method directly:
 
 ````java
@@ -143,22 +151,22 @@ BeanByFactoryType randomFilledByFactory = tdf
 ````
 
 The identification of a method via a string can be problematic when it comes to refactoring or typos. 
-In case of a missing method, Fakegen will try to identify a similar named method and print out an Exception message pointing to the similar method and signature.
+In case of a missing method, Fakegen will try to identify a similarly named method and print out an Exception message pointing to the similar method and signature.
 
 ### Builder 
 
-Fakegen also supports the mayor builder pattern currently present. 
-If you are using [Lombok](https://projectlombok.org/features/Builder), [Immutables](https://immutables.github.io/), [Freebuilder](https://github.com/inferred/FreeBuilder) or [AutoValue](https://github.com/google/auto/tree/master/value), Fakegen can pick up the Builder class, fill them, and allows to return an (immutable) instance.
-
+Fakegen also supports the mayor builder pattern currently present like [Lombok](https://projectlombok.org/features/Builder), [Immutables](https://immutables.github.io/), [Freebuilder](https://github.com/inferred/FreeBuilder) or [AutoValue](https://github.com/google/auto/tree/master/value). 
+Fakegen can pick up the Builder class and fill the builder fields.
+Via `build()` a real (immutable) instance will be created.
 ```java
 BuilderType fromBuilder = filler.fillBuilder(ImmutableBuilderType.Builder.class)
                 .type(SimpleEnum.SOME)
                 .build();
 ```
 
-### Experimental: Interface & Abstract class support
+### Interface & Abstract class support
 
-If your data classes works with Interface or Abstract classes Fakegen will try to create a simple implementation with the help of [ByteBuddy](https://github.com/raphw/byte-buddy).
+If your data classes work with Interface or Abstract classes Fakegen will try to create a simple implementation with the help of [ByteBuddy](https://github.com/raphw/byte-buddy).
 Imagine an Interface like 
 
 ````java
@@ -170,14 +178,15 @@ public interface User {
 ````
 
 Fakegen will create an implementation at runtime with the fields `name`, `birthday` and `registered` and the according getter.
-Currently the approach only detects `get` and `is` prefixes. 
+Currently, the approach only detects `get` and `is` prefixes. 
 Methods other than that will be implemented by throwing an Exception.
-Currently this feature is experimental and I'm happy for feedback on this approach.
+
 
 ## Testing Support
-As mentioned above, Fakegen might find a set of parameters which will fail the test. 
-To have the test repeatable one can provide the TestDataFiller a seed for the random class.
-To print the used random seed in a failure one can use the JUnit libs:
+As mentioned above could Fakegen find a set of parameters which will fail the test.
+These generated values are depended on the used seed, of Fakegen which is different with every execution. 
+The JUnit Libs help to print the currently used seed for the failing test to STOUT.
+This seed can then be facilitated to the constructors the TestDataFiller to replay the failed scenario.
 
 ### JUnit 4
 
@@ -192,7 +201,7 @@ public void failing_test_should_print_seed() {
     throw new RuntimeException();
 }
 // On System out:
-// Seed used in Test 'com.company.logic.MyTest' was -874208787563157915
+// Seed used in Test 'com.company.logic.MyTest' was 874208787563157915
 ````
 
 ````xml
@@ -219,10 +228,10 @@ public class MyTest {
 }
 
 // On System out:
-// Seed used in Test 'com.company.logic.MyTest' was -874208787563157915
+// Seed used in Test 'com.company.logic.MyTest' was 874208787563157915
 ````
 
-The Extension implements a ExceptionListener and will try to find a field with the regular `TestDataFiller`.
+The Extension implements an ExceptionListener and will try to find a field with the regular `TestDataFiller`.
 
 ````xml
 <dependency>
@@ -231,3 +240,4 @@ The Extension implements a ExceptionListener and will try to find a field with t
     <version>0.2</version> 
 </dependency>
 ````
+

@@ -186,7 +186,7 @@ Methods other than that will be implemented by throwing an Exception.
 As mentioned above could Fakegen find a set of parameters which will fail the test.
 These generated values are depended on the used seed, of Fakegen which is different with every execution. 
 The JUnit Libs help to print the currently used seed for the failing test to STOUT.
-This seed can then be facilitated to the constructors the TestDataFiller to replay the failed scenario.
+This seed can then be facilitated to the constructors of `TestDataFiller` to replay the failed scenario.
 
 ### JUnit 4
 

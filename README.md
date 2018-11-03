@@ -90,7 +90,7 @@ SimpleType entity = tdf.createRandomFilledInstance(SimpleType.class);
 System.out.println(entity.getName());
 // Jane
 ```
-Usually, a Fakegen would recursively break down objects until they consist of the java-basic types. 
+Usually, Fakegen would recursively break down objects until they consist of the java-basic types. 
 Within a `DomainConfiguration` it is possible to define a default method for Type creation.
 This allows creating an instance in a more controlled way.
 Currently, it is required that the signature consists of a string.

@@ -144,6 +144,27 @@ public class TestDataFiller {
     /**
      * Creates an object of the required type. It will be recursively filled till it is composed
      * out of basic java types or it visits the same type more than once.
+     * <p>
+     * This method is called if Fakegen has to handle {@link ParameterizedType}s.
+     *
+     * @param <T>  The type of the class.
+     * @param type the desired type, non null.
+     * @return a new filled object with random data.
+     */
+    public <T> T fillInstance(Type type) {
+
+        if (type instanceof ParameterizedType) {
+            return (T) fillInstance((Class) ((ParameterizedType) type).getRawType());
+        } else if (type instanceof Class) {
+            return (T) fillInstance((Class) type);
+        }
+
+        return null;
+    }
+
+    /**
+     * Creates an object of the required type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once.
      *
      * @param <T>      The type of the class.
      * @param clazz    the desired class, non null.

@@ -20,5 +20,11 @@ class OptionalTypeTest {
         assertThat(optionalType.getOptionalString()).isPresent();
         assertThat(optionalType.getOptionalString().get()).hasSize(10);
 
+        assertThat(optionalType.getOptionalStringList()).isNotNull();
+        assertThat(optionalType.getOptionalStringList().get()).isEmpty();
+
+        assertThat(optionalType.getOptionalMap()).isNotNull();
+        assertThat(optionalType.getOptionalMap().get()).isEmpty();
+
     }
 }

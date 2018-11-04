@@ -204,7 +204,7 @@ public abstract class DomainConfiguration implements ObjectFiller {
     public Optional createOptional(String fieldName, Field field) {
         return Optional.ofNullable(field)
                 .map(oField -> (ParameterizedType) oField.getGenericType())
-                .map(type -> (Class<?>) type.getActualTypeArguments()[0])
+                .map(type -> type.getActualTypeArguments()[0])
                 .map(testDataFiller::fillInstance);
     }
 

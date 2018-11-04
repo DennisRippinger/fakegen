@@ -55,12 +55,12 @@ System.out.println(entity);
 
 ### Domain Specific Knowledge
 
-Debugging a test with random strings and numbers can be difficult because they contain no human-comprehendible semantic.
-A `surname` is not something like `3_fGu8C` and mapping such values to a certain semantic a domain-specific task.
+Debugging a test with random strings and numbers can be difficult because they contain no human-comprehensible semantic.
+A `surname` string with a value `3_fGu8C` can be confusing. 
+And a Fakegen cannot infer the semantic of the domain model.
 
 Therefore Fakegen understands a `DomainConfiguration` class.
 They are intended to be built once for your project and referenced by the TestDataFiller instance.
-
 
 ```java
 public class TestConfiguration extends DomainConfiguration {
@@ -74,13 +74,13 @@ public class TestConfiguration extends DomainConfiguration {
         Faker faker = new Faker(random);
 
         fieldForStringShouldUse("name", () -> faker.name().firstName());
-	fieldForClassShouldUse("birthday", LocalDate.class, () -> LocalDate.of(2000, 6, 1);
+        fieldForClassShouldUse("birthday", LocalDate.class, () -> LocalDate.of(2000, 6, 1);
 
     }
 }
 ```
 `DomainConfiguration` provides methods to configure a Supplier for a specific field name and type combination.
-The Example works together with the [Faker library](https://github.com/DiUS/java-faker).
+The example works together with the [Faker library](https://github.com/DiUS/java-faker).
 Faker allows choosing from predefined values for different domains, such that the following is possible.
 
 ```java
@@ -90,7 +90,7 @@ SimpleType entity = tdf.createRandomFilledInstance(SimpleType.class);
 System.out.println(entity.getName());
 // Jane
 ```
-Usually, Fakegen would recursively break down objects until they consist of the java-basic types. 
+Usually, Fakegen would recursively break down objects until they consist of the basic java types. 
 Within a `DomainConfiguration` it is possible to define a default method for Type creation.
 This allows creating an instance in a more controlled way.
 Currently, it is required that the signature consists of a string.
@@ -184,13 +184,13 @@ Methods other than that will be implemented by throwing an Exception.
 
 ## Testing Support
 As mentioned above could Fakegen find a set of parameters which will fail the test.
-These generated values are depended on the used seed, of Fakegen which is different with every execution. 
+These generated values are depended on the used seed, generated with each instance if the `TestDataFiller`.
 The JUnit Libs help to print the currently used seed for the failing test to STOUT.
 This seed can then be facilitated to the constructors of `TestDataFiller` to replay the failed scenario.
 
 ### JUnit 4
 
-For JUnit 4 Fakegen provides a Rule:
+For JUnit 4 this Rule works as Delegate for the TestDataFiller:
 
 ````java
 @Rule

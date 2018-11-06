@@ -186,10 +186,7 @@ public class TestDataFiller {
      * @return a new filled object with random data.
      */
     public <T> T fillInstance(Class<T> clazz, Consumer<T> consumer) {
-        T randomFilledInstance = createRandomFilledInstanceInternal(clazz, 0, DEFAULT);
-        consumer.accept(randomFilledInstance);
-
-        return randomFilledInstance;
+        return fillInstance(clazz, DEFAULT, consumer);
     }
 
     /**

@@ -233,8 +233,6 @@ public class TestDataFiller {
      *      .simpleEnum(SimpleEnum.VALUE_2)
      *      .build();
      * }</pre>
-     * <p>
-     * For Lombok better use {@link #fillBuilder(Object)}.
      *
      * @param <T>      The type of the class.
      * @param instance the builder instance, non null.

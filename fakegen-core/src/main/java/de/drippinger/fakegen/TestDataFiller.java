@@ -11,11 +11,11 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static de.drippinger.fakegen.Configs.BUILDER;
+import static de.drippinger.fakegen.Configs.DEFAULT;
 import static de.drippinger.fakegen.exception.ExceptionHelper.createExceptionMessage;
 import static de.drippinger.fakegen.util.Ignore.isJvmRelevant;
 import static de.drippinger.fakegen.util.ReflectionUtils.*;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
 
 /**
  * This class offers methods to create and fill an instance of a class. The intended use is for
@@ -138,7 +138,21 @@ public class TestDataFiller {
      * @return a new filled object with random data.
      */
     public <T> T fillInstance(Class<T> clazz) {
-        return createRandomFilledInstanceInternal(clazz, 0);
+        return createRandomFilledInstanceInternal(clazz, 0, DEFAULT);
+    }
+
+
+    /**
+     * Creates an object of the required type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once.
+     *
+     * @param <T>    The type of the class.
+     * @param clazz  the desired class, non null.
+     * @param config the config element, non null.
+     * @return a new filled object with random data.
+     */
+    public <T> T fillInstance(Class<T> clazz, FakegenConfig config) {
+        return createRandomFilledInstanceInternal(clazz, 0, config);
     }
 
     /**
@@ -172,11 +186,29 @@ public class TestDataFiller {
      * @return a new filled object with random data.
      */
     public <T> T fillInstance(Class<T> clazz, Consumer<T> consumer) {
-        T randomFilledInstance = createRandomFilledInstanceInternal(clazz, 0);
+        T randomFilledInstance = createRandomFilledInstanceInternal(clazz, 0, DEFAULT);
         consumer.accept(randomFilledInstance);
 
         return randomFilledInstance;
     }
+
+    /**
+     * Creates an object of the required type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once.
+     *
+     * @param <T>      The type of the class.
+     * @param clazz    the desired class, non null.
+     * @param config   the config element, non null.
+     * @param consumer lambda consumer which will be applied on the created instance.
+     * @return a new filled object with random data.
+     */
+    public <T> T fillInstance(Class<T> clazz, FakegenConfig config, Consumer<T> consumer) {
+        T randomFilledInstance = createRandomFilledInstanceInternal(clazz, 0, config);
+        consumer.accept(randomFilledInstance);
+
+        return randomFilledInstance;
+    }
+
 
     /**
      * Creates a list of the required type. It will be recursively filled till it is composed
@@ -188,13 +220,27 @@ public class TestDataFiller {
      * @return a new filled object with random data.
      */
     public <T> List<T> fillInstances(Class<T> clazz, int amount) {
+        return fillInstances(clazz, DEFAULT, amount);
+    }
+
+    /**
+     * Creates a list of the required type. It will be recursively filled till it is composed
+     * out of basic java types or it visits the same type more than once.
+     *
+     * @param <T>    The type of the class.
+     * @param clazz  the desired class, non null.
+     * @param config the config element, non null.
+     * @param amount the required number of random instances, greater 0.
+     * @return a new filled object with random data.
+     */
+    public <T> List<T> fillInstances(Class<T> clazz, FakegenConfig config, int amount) {
         if (amount < 0) {
             throw new FakegenException("Can not handle negative amount");
         }
 
         List<T> result = new ArrayList(amount + 1);
         for (int i = 0; i < amount; i++) {
-            result.add(fillInstance(clazz));
+            result.add(fillInstance(clazz, config));
         }
 
         return result;
@@ -220,7 +266,7 @@ public class TestDataFiller {
      * @return a new filled builder with random data.
      */
     public <T> T fillBuilder(Class<T> clazz) {
-        return createRandomFilledInstanceInternal(clazz, 0, true, singleton("initBits"), true);
+        return createRandomFilledInstanceInternal(clazz, 0, BUILDER);
     }
 
     /**
@@ -239,7 +285,7 @@ public class TestDataFiller {
      * @return a new filled builder with random data.
      */
     public <T> T fillBuilder(T instance) {
-        return (T) fill(instance, instance.getClass(), 0, emptySet(), false);
+        return (T) fill(instance, instance.getClass(), 0, BUILDER);
     }
 
 
@@ -258,6 +304,25 @@ public class TestDataFiller {
      * @return a new instance created by the first found factory method.
      */
     public <T> T fillByFactory(Class<T> clazz) {
+        return fillByFactory(clazz, DEFAULT);
+    }
+
+    /**
+     * Creates an object of the required type by the usage of a Factory method. It will be recursively
+     * filled till it is composed out of basic java types or it visits the same type more than once.
+     * The method will try to identify a factory method and use it to create the instance. A factory
+     * method is static and returns the the desired type within the class with zero or more parameters.
+     * The parameters will be created by the random filler and applied to the method call.
+     * <p>
+     * This will use the first factory method it can find, which may depend on the used JVM. To define the
+     * exact method, use {@link #fillByFactory(Class, MethodHolder)}.
+     *
+     * @param <T>    the desired type.
+     * @param clazz  the desired class containing a factory method.
+     * @param config the config element, non null.
+     * @return a new instance created by the first found factory method.
+     */
+    public <T> T fillByFactory(Class<T> clazz, FakegenConfig config) {
         try {
 
             Optional<Method> possibleFactoryMethod = Arrays.stream(clazz.getMethods())
@@ -270,7 +335,7 @@ public class TestDataFiller {
                 Method method = possibleFactoryMethod.get();
 
                 Object[] instances = Arrays.stream(method.getParameterTypes())
-                        .map(this::fillInstance)
+                        .map(aClass -> this.fillInstance(aClass, config))
                         .toArray();
 
                 return (T) method.invoke(null, instances);
@@ -283,6 +348,7 @@ public class TestDataFiller {
         return null;
 
     }
+
 
     /**
      * Creates an object of the required type by the usage of a Factory method. It will be recursively
@@ -304,11 +370,35 @@ public class TestDataFiller {
      * @return a new instance created by the desired factory method.
      */
     public <T> T fillByFactory(Class<T> clazz, MethodHolder methodHolder) {
+        return fillByFactory(clazz, DEFAULT, methodHolder);
+    }
+
+    /**
+     * Creates an object of the required type by the usage of a Factory method. It will be recursively
+     * filled till it is composed out of basic java types or it visits the same type more than once.
+     * The method will the factory method defined and use it to create the instance. A factory
+     * method is static and returns the the desired type within the class with zero or more parameters.
+     * The parameters will be created by the random filler and applied to the method call. An Example:
+     * <pre>{@code
+     * BeanByFactoryType randomFilledByFactory = tdf
+     *                 .createRandomFilledByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
+     * }</pre>
+     * <p>
+     * Use {@link MethodHolder#method(String, Class[])} for convenience. In case of missing method
+     * an exception will try to identify a similar named method to identify missing refactoring or typos easier.
+     *
+     * @param <T>          the desired type.
+     * @param clazz        the desired class containing a factory method, non null.
+     * @param config       the config element, non null.
+     * @param methodHolder a wrapper to identify a method, non null.
+     * @return a new instance created by the desired factory method.
+     */
+    public <T> T fillByFactory(Class<T> clazz, FakegenConfig config, MethodHolder methodHolder) {
         try {
             Method method = methodHolder.createMethod(clazz);
 
             Object[] instances = Arrays.stream(methodHolder.getParameterTypes())
-                    .map(this::fillInstance)
+                    .map(aClass -> this.fillInstance(aClass, config))
                     .toArray();
 
             return (T) method.invoke(null, instances);
@@ -322,13 +412,7 @@ public class TestDataFiller {
 
     }
 
-
-    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter) {
-        return createRandomFilledInstanceInternal(clazz, recursionCounter, false, emptySet(), false);
-    }
-
-    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, boolean usePrivateConstructor,
-                                                     Set<String> ignoreFields, boolean useSetter) {
+    private <T> T createRandomFilledInstanceInternal(Class<T> clazz, int recursionCounter, FakegenConfig config) {
 
         if (objectFillerFactoryMethods.containsKey(clazz)) {
             Method method = objectFillerFactoryMethods.get(clazz);
@@ -339,12 +423,12 @@ public class TestDataFiller {
             return (T) domainConfiguration.createEnum(null, clazz);
         } else if (possibleForByteBuddy(clazz)) {
             T simpleImpl = dynamicClassGenerator.createSimpleInstanceOfInterfaceOrAbstract(clazz);
-            fill(simpleImpl, simpleImpl.getClass(), recursionCounter, ignoreFields, useSetter);
+            fill(simpleImpl, simpleImpl.getClass(), recursionCounter, config);
             return simpleImpl;
         } else {
-            return (T) extractPlainConstructor(clazz, usePrivateConstructor)
+            return (T) extractPlainConstructor(clazz, config.getUsePrivateConstructor())
                     .map(this::newInstance)
-                    .map(instance -> fill(instance, clazz, recursionCounter, ignoreFields, useSetter))
+                    .map(instance -> fill(instance, clazz, recursionCounter, config))
                     .orElse(null);
         }
     }
@@ -368,28 +452,28 @@ public class TestDataFiller {
 
     }
 
-    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, Set<String> ignoreFields, boolean useSetter) {
+    private <T> Object fill(Object instance, Class<T> clazz, int recursionCounter, FakegenConfig config) {
 
         getAllFields(clazz)
-                .filter(field -> !ignoreFields.contains(field.getName()))
+                .filter(field -> !config.getIgnoreFields().contains(field.getName()))
                 .filter(ReflectionUtils::isNotFinal)
                 .filter(ReflectionUtils::isNotRelevantForCoverage)
-                .forEach(field -> fillField(instance, field, recursionCounter, clazz, useSetter));
+                .forEach(field -> fillField(instance, field, recursionCounter, clazz, config));
 
         return instance;
     }
 
     @SneakyThrows
-    private void fillField(Object instance, Field field, int recursionCounter, Class clazz, boolean useSetter) {
+    private void fillField(Object instance, Field field, int recursionCounter, Class clazz, FakegenConfig config) {
         Object value = createRandomValueForField(field);
 
         if (value == null && recursionCounter < 1) {
             recursionCounter++;
-            value = createRandomFilledInstanceInternal(field.getType(), recursionCounter);
+            value = createRandomFilledInstanceInternal(field.getType(), recursionCounter, config);
         }
 
         if (value != null) {
-            if (isNotFinal(field) && !useSetter) {
+            if (isNotFinal(field) && !config.getUseSetter()) {
                 field.setAccessible(true);
                 field.set(instance, value);
             } else {

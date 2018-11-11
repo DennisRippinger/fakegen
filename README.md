@@ -57,7 +57,7 @@ System.out.println(entity);
 
 Debugging a test with random strings and numbers can be difficult because they contain no human-comprehensible semantic.
 A `surname` string with a value `3_fGu8C` can be confusing. 
-And a Fakegen cannot infer the semantic of the domain model.
+And Fakegen cannot infer the semantic of the domain model.
 
 Therefore Fakegen understands a `DomainConfiguration` class.
 They are intended to be built once for your project and referenced by the TestDataFiller instance.

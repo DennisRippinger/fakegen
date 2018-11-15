@@ -90,7 +90,7 @@
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <reflections.version>0.9.11</reflections.version>
         <sortpom-maven-plugin.version>2.10.0</sortpom-maven-plugin.version>
-        <system-rules.version>1.18.0</system-rules.version>
+        <system-rules.version>1.19.0</system-rules.version>
     </properties>
 
     <build>

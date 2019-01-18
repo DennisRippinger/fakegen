@@ -77,7 +77,7 @@
         <byte-buddy.version>1.9.6</byte-buddy.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
-        <freebuilder.version>1.15.2</freebuilder.version>
+        <freebuilder.version>2.0.0</freebuilder.version>
         <immutables.version>2.7.4</immutables.version>
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <javafaker.version>0.16</javafaker.version>

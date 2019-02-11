@@ -80,7 +80,7 @@
         <freebuilder.version>1.15.2</freebuilder.version>
         <immutables.version>2.7.4</immutables.version>
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
-        <javafaker.version>0.16</javafaker.version>
+        <javafaker.version>0.17.2</javafaker.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
         <junit-platform-engine.version>1.3.2</junit-platform-engine.version>
         <junit.version>4.12</junit.version>

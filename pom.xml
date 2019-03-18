@@ -72,7 +72,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <?SORTPOM RESUME?>
 
-        <assertj-core.version>3.11.1</assertj-core.version>
+        <assertj-core.version>3.12.2</assertj-core.version>
         <auto-value.version>1.6.3</auto-value.version>
         <byte-buddy.version>1.9.6</byte-buddy.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>

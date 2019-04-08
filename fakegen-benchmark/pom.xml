@@ -16,7 +16,7 @@
         <javac.target>1.8</javac.target>
         <jmh-profilers.version>0.1.4</jmh-profilers.version>
         <jmh.version>1.21</jmh.version>
-        <mockito-core.version>2.23.4</mockito-core.version>
+        <mockito-core.version>2.26.0</mockito-core.version>
         <uberjar.name>benchmarks</uberjar.name>
     </properties>
 

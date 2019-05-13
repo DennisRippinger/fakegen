@@ -79,7 +79,7 @@
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <freebuilder.version>1.15.2</freebuilder.version>
         <immutables.version>2.7.5</immutables.version>
-        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
         <javafaker.version>0.16</javafaker.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
         <junit-platform-engine.version>1.4.0</junit-platform-engine.version>

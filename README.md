@@ -1,6 +1,6 @@
 # Fakegen
-[![Build Status](https://img.shields.io/travis/com/DennisRippinger/fakegen.svg)](https://travis-ci.com/DennisRippinger/fakegen)
-[![Coveralls](https://img.shields.io/coveralls/github/DennisRippinger/fakegen.svg)](https://coveralls.io/github/DennisRippinger/fakegen?branch=master)
+[![Build Status](https://img.shields.io/travis/com/DennisRippinger/fakegen/master.svg)](https://travis-ci.com/DennisRippinger/fakegen)
+[![Coveralls](https://img.shields.io/coveralls/github/DennisRippinger/fakegen/master.svg)](https://coveralls.io/github/DennisRippinger/fakegen?branch=master)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/de/drippinger/fakegen/fakegen-core/maven-metadata.xml.svg)](https://search.maven.org/search?q=g:de.drippinger.fakegen%20AND%20a:fakegen-core)
 
 

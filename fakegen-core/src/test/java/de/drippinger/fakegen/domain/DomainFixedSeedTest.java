@@ -23,7 +23,7 @@ class DomainFixedSeedTest {
 
         SimpleType randomFilledInstance = tdf.fillInstance(SimpleType.class);
 
-        assertThat(randomFilledInstance.getName()).isEqualTo("Jayne");
+        assertThat(randomFilledInstance.getName()).isEqualTo("Jacob");
     }
 
     public static class TestConfiguration extends DomainConfiguration {

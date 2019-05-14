@@ -82,7 +82,7 @@
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
         <javafaker.version>0.18</javafaker.version>
         <junit-jupiter.version>5.4.2</junit-jupiter.version>
-        <junit-platform-engine.version>1.4.0</junit-platform-engine.version>
+        <junit-platform-engine.version>1.4.2</junit-platform-engine.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.18.8</lombok.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>

@@ -75,7 +75,7 @@
         <assertj-core.version>3.12.2</assertj-core.version>
         <auto-value.version>1.6.3</auto-value.version>
         <byte-buddy.version>1.9.12</byte-buddy.version>
-        <commons-lang3.version>3.8.1</commons-lang3.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <freebuilder.version>2.3.0</freebuilder.version>
         <immutables.version>2.7.5</immutables.version>

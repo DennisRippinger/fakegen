@@ -35,7 +35,7 @@ See [Testing Support](#testing-support) for more input.
     <groupId>de.drippinger.fakegen</groupId>
     <artifactId>fakegen-core</artifactId>
     <version>0.2</version> 
-    <scope>test</test>
+    <scope>test</scope>
 </dependency>
 ````
 

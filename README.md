@@ -210,7 +210,7 @@ public void failing_test_should_print_seed() {
     <groupId>de.drippinger.fakegen</groupId>
     <artifactId>fakegen-junit4</artifactId>
     <version>0.2</version> 
-    <scope>test</test>
+    <scope>test</scope>
 </dependency>
 ````
 
@@ -240,7 +240,7 @@ The Extension implements an ExceptionListener and will try to find a field with 
     <groupId>de.drippinger.fakegen</groupId>
     <artifactId>fakegen-junit5</artifactId>
     <version>0.2</version> 
-    <scope>test</test>
+    <scope>test</scope>
 </dependency>
 ````
 

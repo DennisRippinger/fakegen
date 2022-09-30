@@ -11,6 +11,10 @@
 
     <name>Fakegen :: Generators :: Autovalue</name>
 
+    <properties>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.google.auto.value</groupId>

@@ -1,31 +1,31 @@
 # Fakegen
-[![Build Status](https://img.shields.io/travis/com/DennisRippinger/fakegen/master.svg)](https://travis-ci.com/DennisRippinger/fakegen)
+[![Build Status](https://github.com/DennisRippinger/fakegen/actions/workflows/maven.yml/badge.svg)](https://github.com/DennisRippinger/fakegen/actions)
 [![Coveralls](https://img.shields.io/coveralls/github/DennisRippinger/fakegen/master.svg)](https://coveralls.io/github/DennisRippinger/fakegen?branch=master)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/de/drippinger/fakegen/fakegen-core/maven-metadata.xml.svg)](https://search.maven.org/search?q=g:de.drippinger.fakegen%20AND%20a:fakegen-core)
 
 
-Fakegen is a library to create test data on demand. 
-Unlike other libraries, it can fill an entire object graph of your model class with random data. 
+Fakegen is a library to create test data on demand.
+Unlike other libraries, it can fill an entire object graph of your model class with random data.
 So you can focus on the relevant test data.
 
 ## Motivation
 
-In projects with complex business logic tests often require that our parameter objects, like entities or DTOs, are filled with non-null data. 
-However, for the test itself, only a fraction of the parameters are relevant. 
-They may change from test to test, but an often seen pattern is that test initialization is copied, altering only some data. 
-Or it is hidden in test-wise until methods. 
+In projects with complex business logic tests often require that our parameter objects, like entities or DTOs, are filled with non-null data.
+However, for the test itself, only a fraction of the parameters are relevant.
+They may change from test to test, but an often seen pattern is that test initialization is copied, altering only some data.
+Or it is hidden in test-wise until methods.
 Both result in noise within the test.
-After a while, it is difficult to identify the relevant from the non-relevant test data. 
+After a while, it is difficult to identify the relevant from the non-relevant test data.
 Fakegen is a test library that allows to automatically fill the test objects with predefined or random data so that we can focus on the relevant data.
 
 ### Relation to property based testing
-Filling the test objects with random data is a topic related to property-based testing, see for instance [QuickTheories](https://github.com/ncredinburgh/QuickTheories) or [jqwik](https://jqwik.net/). 
-Property-based testing algorithms try to identify a set of properties, which fail the test, e.g. trying the usual problematic cases like for Integer: min/max/zero. 
+Filling the test objects with random data is a topic related to property-based testing, see for instance [QuickTheories](https://github.com/ncredinburgh/QuickTheories) or [jqwik](https://jqwik.net/).
+Property-based testing algorithms try to identify a set of properties, which fail the test, e.g. trying the usual problematic cases like for Integer: min/max/zero.
 Fakegen does not try to identify such value sets actively.
 Its main purpose is to simplify the given part of the test generation.
 The generated values should satisfy a minimal requirement, such that the developer can focus on the variable parts for the test.
-Due to the random nature of Fakegen, it could identify a problematic set of data, just like property-based testing. 
-In such cases, it offers possibilities to make the test reproducible. 
+Due to the random nature of Fakegen, it could identify a problematic set of data, just like property-based testing.
+In such cases, it offers possibilities to make the test reproducible.
 See [Testing Support](#testing-support) for more input.
 
 ## Dependency
@@ -34,7 +34,7 @@ See [Testing Support](#testing-support) for more input.
 <dependency>
     <groupId>de.drippinger.fakegen</groupId>
     <artifactId>fakegen-core</artifactId>
-    <version>0.2</version> 
+    <version>0.2</version>
     <scope>test</scope>
 </dependency>
 ````
@@ -57,7 +57,7 @@ System.out.println(entity);
 ### Domain Specific Knowledge
 
 Debugging a test with random strings and numbers can be difficult because they contain no human-comprehensible semantic.
-A `surname` string with a value `3_fGu8C` can be confusing. 
+A `surname` string with a value `3_fGu8C` can be confusing.
 And Fakegen cannot infer the semantic of the domain model.
 
 Therefore Fakegen understands a `DomainConfiguration` class.
@@ -91,7 +91,7 @@ SimpleType entity = tdf.createRandomFilledInstance(SimpleType.class);
 System.out.println(entity.getName());
 // Jane
 ```
-Usually, Fakegen would recursively break down objects until they consist of the basic java types. 
+Usually, Fakegen would recursively break down objects until they consist of the basic java types.
 Within a `DomainConfiguration` it is possible to define a default method for Type creation.
 This allows creating an instance in a more controlled way.
 Currently, it is required that the signature consists of a string.
@@ -118,7 +118,7 @@ An Example:
         }
     }
 ````
-The method `createSimpleType` will now be used for all fields of the type, regardless of their field name. 
+The method `createSimpleType` will now be used for all fields of the type, regardless of their field name.
 
 ## Features
 
@@ -139,7 +139,7 @@ public static BeanByFactoryType createBeanWith(String someField) {
 BeanByFactoryType randomFilledByFactory = tdf
         .fillByFactory(BeanByFactoryType.class);
 ```
-Fakegen will look for a static method returning the requested type within the class. 
+Fakegen will look for a static method returning the requested type within the class.
 The parameters objects will be created with the regular Fakegen logic.
 It also identifies copy constructors and omits them.
 In cases were multiple Factory methods are present it will use the first one found.
@@ -151,12 +151,12 @@ BeanByFactoryType randomFilledByFactory = tdf
         .fillByFactory(BeanByFactoryType.class, method("createBeanWith", String.class));
 ````
 
-The identification of a method via a string can be problematic when it comes to refactoring or typos. 
+The identification of a method via a string can be problematic when it comes to refactoring or typos.
 In case of a missing method, Fakegen will try to identify a similarly named method and print out an Exception message pointing to the similar method and signature.
 
-### Builder 
+### Builder
 
-Fakegen also supports the mayor builder pattern currently present like [Lombok](https://projectlombok.org/features/Builder), [Immutables](https://immutables.github.io/), [Freebuilder](https://github.com/inferred/FreeBuilder) or [AutoValue](https://github.com/google/auto/tree/master/value). 
+Fakegen also supports the mayor builder pattern currently present like [Lombok](https://projectlombok.org/features/Builder), [Immutables](https://immutables.github.io/), [Freebuilder](https://github.com/inferred/FreeBuilder) or [AutoValue](https://github.com/google/auto/tree/master/value).
 Fakegen can pick up the Builder class and fill the builder fields.
 Via `build()` a real (immutable) instance will be created.
 ```java
@@ -168,7 +168,7 @@ BuilderType fromBuilder = filler.fillBuilder(ImmutableBuilderType.Builder.class)
 ### Interface & Abstract class support
 
 If your data classes work with Interface or Abstract classes Fakegen will try to create a simple implementation with the help of [ByteBuddy](https://github.com/raphw/byte-buddy).
-Imagine an Interface like 
+Imagine an Interface like
 
 ````java
 public interface User {
@@ -179,7 +179,7 @@ public interface User {
 ````
 
 Fakegen will create an implementation at runtime with the fields `name`, `birthday` and `registered` and the according getter.
-Currently, the approach only detects `get` and `is` prefixes. 
+Currently, the approach only detects `get` and `is` prefixes.
 Methods other than that will be implemented by throwing an Exception.
 
 
@@ -209,7 +209,7 @@ public void failing_test_should_print_seed() {
 <dependency>
     <groupId>de.drippinger.fakegen</groupId>
     <artifactId>fakegen-junit4</artifactId>
-    <version>0.2</version> 
+    <version>0.2</version>
     <scope>test</test>
 </dependency>
 ````
@@ -239,7 +239,7 @@ The Extension implements an ExceptionListener and will try to find a field with 
 <dependency>
     <groupId>de.drippinger.fakegen</groupId>
     <artifactId>fakegen-junit5</artifactId>
-    <version>0.2</version> 
+    <version>0.2</version>
     <scope>test</test>
 </dependency>
 ````

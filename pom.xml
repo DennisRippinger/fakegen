@@ -65,13 +65,14 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.organization>dennisrippinger</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <?SORTPOM RESUME?>
 
         <assertj-core.version>3.12.2</assertj-core.version>
         <auto-value.version>1.6.3</auto-value.version>
         <byte-buddy.version>1.9.12</byte-buddy.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <freebuilder.version>2.3.0</freebuilder.version>
         <immutables.version>2.7.5</immutables.version>
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
@@ -178,11 +179,6 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>${coveralls-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

@@ -33,10 +33,13 @@ class JvmTypesTest {
     private static Stream<Class<?>> jvmClasses() {
         Reflections reflections = new Reflections("java", new SubTypesScanner(false));
 
-        return reflections.getSubTypesOf(Object.class)
+        // Depending on the Java Version we may have access to 'java' packaged classes. To not fail the Test, we have a
+        // default Stream.
+        return Stream.concat(reflections.getSubTypesOf(Object.class)
                 .stream()
                 .filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
-                .filter(aClass -> !Objects.equals(aClass, MulticastSocket.class));
+                .filter(aClass -> !Objects.equals(aClass, MulticastSocket.class)),
+                Stream.of(Object.class));
     }
 
 }

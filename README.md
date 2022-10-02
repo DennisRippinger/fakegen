@@ -1,7 +1,8 @@
 # Fakegen
 [![Build Status](https://github.com/DennisRippinger/fakegen/actions/workflows/maven.yml/badge.svg)](https://github.com/DennisRippinger/fakegen/actions)
-[![Coveralls](https://img.shields.io/coveralls/github/DennisRippinger/fakegen/master.svg)](https://coveralls.io/github/DennisRippinger/fakegen?branch=master)
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/de/drippinger/fakegen/fakegen-core/maven-metadata.xml.svg)](https://search.maven.org/search?q=g:de.drippinger.fakegen%20AND%20a:fakegen-core)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DennisRippinger_fakegen&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DennisRippinger_fakegen)[![Maven metadata URL](https://img.shields.io/maven-central/v/de.drippinger.fakegen/fakegen-core?color=blue)](https://search.maven.org/search?q=g:de.drippinger.fakegen%20AND%20a:fakegen-core)
+
+
 
 
 Fakegen is a library to create test data on demand.
